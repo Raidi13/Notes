@@ -1,0 +1,538 @@
+when docker is installed a group called docker is created
+
+add ec2-user to the docker group
+
+sudo usermod -aG docker ec2 user
+exit and login again to get the effect
+
+
+docker commands:
+---------------
+image is a static file it has some memory if you run you will get container
+
+image -----> container
+container is the running instance of image
+
+
+follow the steps to install the docker
+-------------------------------------------
+we need to take sudo su - (access)
+
+then to install---> yum install -y yum-utils
+nxt -------------->yum-config-manager --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
+
+nxt install docker --------> yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+to start docker -------> systemctl start docker
+
+to check the status wether docker is install or not -----> systemctl status docker
+
+to add secondary group for docker use -----> sudo usermod -aG docker ec2-user( "A" for append "g" FOR GROUP)
+
+if you want to check container are running or not use ---> docker ps
+
+ docker image is to  displays the images available in  server           
+ the image is static file if you run the image you will get container --> docker image
+ container is the running instance of image 
+(VM is running instance of AMI) 
+
+
+if yo dont have image use docker pull it will get image from docker repository /hub ---> docker pull
+
+exmp: if to want to install nginx use docker pull nginx (if you dont give the version it will take latest version)
+
+
+*** if you want to create the container from image use---> docker create nginx:alpine-slim
+
+if you want see all the container ----> docker ps -a ("a"-ALL)
+
+*** if you want ot run or start the docker container ----> docker start id (container id)
+
+
+ ** if you want to remove the container you have to stop firts and remove the container
+   --- > docker stop id (container id)
+   --- > docker rm id (comtainer id)
+   ** if you want to remove container without stoping **
+   ---- > docker rm -f id (cotainer id) ("F" force rm)
+      **if you want to remove image without stoping *
+     -- > docker rmi id (image id)
+
+
+*if you want to pull+create+start you can use docker run ---> docker run
+
+ *** How do you run container in the background  --> docker run -d ("D" is ditaching from screen)
+ *** How do you port and container to run <host-port>:<container-port>  --> docker run -p ("P" is port forwding)
+
+
+** how can you open the port number in internet 
+   A , BY using port forwding 
+
+
+** if want to go in to the container and check --> docker exec -it container-id bash ( "IT" inpute ternmal)
+  how you get the access to running container 
+A, by using docker exec -it id bash
+
+** if you want to inspect or get info of container  ---> docker inspect id 
+** to check the logs of container -- > docker logs id
+
+
+docker file
+-------------
+*** docker file is used to build the custome  images or our own images we can make use 
+    of docker instructions to create custome images
+    we have FROM,RUN,CMD,ENTRYPOINT,COPY,ADD,ENV,ARG,WORKDIR,USER
+
+
+
+10/15/24
+-------------
+
+
+From :
+------ 
+from shouid be the first instruction in docker file. it represents base os
+there is an exception ARG
+
+how do you build docker image?
+docker build -t <image-name>:<version>. --> (. represents current folder have docker file)
+
+** docker build -t run:v1 .** to build the image (run is an example u can choose your own name)
+
+RUN
+------
+RUN  command is used to configure image like installing packages,configure , etc,
+run instruction runs at the time of image bulding 
+
+CMD
+----
+CMD instruction runs at the time of containers creation . it keeps containers running
+
+systemctl only works for full server ,it wil not work for containers that will be in executable fromat ([])
+
+cmd "executable","parml"....
+
+nginx -g daemon -off ----> runs in foreground
+
+docker build --> is image creation
+docker run ---> container creation ---> cmd
+
+to run the cmd image  ----> docker build -t cmd:v1 .
+
+to check the foreground is running ----> docker run -d cmd:v1 (d is for detach)
+make a duplicate and check the foreground is running use (docker ps)
+then remove the container ---> docker rm -f id(container id)
+and check the nginx is port is running use ---> docker run -d -p 80:80 cmd:v1 ( -d is detach , -p is port)
+
+to re tag first check "docker images" tag= v1 if you want to re-name  
+use the coomad ---> docker tag cmd:v1 username/version:v1
+ 
+intvw :q
+what is run instruction in docker
+run use at the time of image creation
+
+what is cmd instrution in docker
+cmd use at the time of container creation
+
+LABEL
+-------
+Label are used to filter the values ---> docker images -f 'label=xxx=xxxx'(xx are what you want to filter)
+
+EXPOSE
+------
+inform about the ports opened by contaiers can't really open the port , just as a 
+information to user
+
+ENV:
+----
+sets the environment variables these can be used inside container
+
+COPY:
+-----
+used to copy files from workspace to image
+
+
+ADD:
+----
+add also does same as copy but it has  2 extra capabilites
+1. it can get files from internet
+2. it can extract the files into images
+
+
+to deleat the containers ---> docker rm -f docker ps -a -q
+if you want the list of containers u r using ---> docker ps -a -q
+
+
+10/16/24
+--------
+toipc :docker instructions
+---------------------------
+ENTRY POINT:
+------------
+1.CMD can be overridden at runtime
+2.you can't overridden ENTRYPOINT like CMD.if you try to do it will go and append 
+  to the entrypoint command
+3.And for better results CMD can provide args to ENTRYPOINT, so you can mention default 
+  args through CMD and you can overridden them at run time.
+  
+ **(docker logs -f ("-f " follow)**
+
+
+2,USER :
+-------
+for security you shouid not run contaiers using root user, it must be on normal user 
+atlist last instruction shouid USER <SOME -USERNAME>
+
+3.WORKDIR :
+----------
+is used to set the current working directory inside docker image
+
+4.ARG:
+-------
+ARG is used to set the variables at build time only not inside the container
+
+Intv :q:
+
+ARG VS ENV:
+-----------
+1. ENV variables can be access in image build time and container both
+2. ARG  is only accessed at the time of image creation.
+3. you can use ARG instruction before  FROM  in one special case i.e to supply version
+	to the base image.
+	
+4. ARG instruction before FROM is only vaild until from ,it can be accessed after FROM
+
+5. how can i access ARG values inside container ?
+ A, You can set arg values to env variables
+ 
+ONBUILD :
+---------
+is used to trigger few instructions at build when a user is using our image
+
+*/var/lib/docker :-docker directory
+
+17/10/24
+topic : backend & frontend configure:
+-------------------------------------
+. To check the disk size --> df -hT
+. to check the the configure use it will show (Container's network interfaces,IP address ,Netmask and Broadcast
+  ,MAC address) ----> ifconfig  
+
+. docker inspect will give container information ----> docker inspect
+.ens5(every vm will get access internet to our server isp aws will provide)
+
+. docker 0 (docker also created one virtual network interface  it acts like modem or (gateway) that is  docker 0)
+  for contaiers all the network  will be provide by docker 0 it self that is called Bridge network.
+  
+
+**** why default network :- when you install docker it will give default network in that if you dont want to communicate
+     with contaiers you can go with it .
+	
+	* but if want to communicate with containers in default network  we dont have those components
+		that we will create our own network. docker also recomand the same.
+
+
+** mysql configure:
+------------------
+
+docker network ls ----> 
+
+.docker run -d --name mysq --network host  mysql:v1 ---->
+
+. netstat -lntp------>
+
+. docker ps --->
+
+. sudo netstat -lntp ---->
+
+
+Backend configure in docker :***((when your are woking in host network in (BACKEND DOCKER FILE THE DB.HOST HAS TO BE "localhost")) backend to connect mysql.
+--------------------------------
+****.error at install of backend (Error: getaddrinfo ENOTFOUND mysql) means here is the problem 
+ is when docker use default network it will not communicate between comtainer 
+ here come accross abot brigde network out docker0 is brigde b/t all the container
+ soo we have to create your own network **
+ 
+ 
+4.Frontend : (when your are woking in host network in (FRONTEND NGINX.CONF (LOCAION /API/ PROXY_PASS CHANGE TO LOCALHOST HAS TO BE "localhost")) FRONTEND to connect Backend
+-------------
+ .docker build -t frontend:v1 . -->
+ 
+ .docker run -d --name frontend --network host frontend:v1
+ 
+ .sudo netstat -lntp---> to check the ports are opened like 
+  **(u can see docker directly opened the ports there is no isolated network 
+  for docker contaiers so here we will get security issues because here we 
+  dont have dedicated network)**
+  
+ *** on this bases we ned to create brigde network ***
+
+
+5.** docker Networking :--
+----------------------
+A. Host :--1st (we need to set the name to host)
+         1. contaiers using host n/w will not get ip address.
+		 2. it means contaiers are sharing host ip address.
+		 3. containers open host port.
+commands :-
+---------
+* docker network is ---> to check the network host names.
+* netstat -lntp -----> to check the port details.
+* sudo netstat -lntp ---> to check the port details .
+* docker inspect ----> to check the ip address for Host.
+* docker rm -f ---> this will remove the container.
+* docker rmi mysql:v1 ---> this will remove the images.
+* docker logs backend ---> to check backend port is running or not .
+**docker rm -f $(docker ps -a -q) ---> to remove all the contaiers.
+ 
+B. Bridge :- This is default 
+ **(in Backend the losthost will not work change the Backend dockerfile DB_Host to "mysql"
+ **(in frontend the losthost will not work change the (FRONTEND NGINX.CONF (LOCAION /API/ PROXY_PASS CHANGE TO LOCALHOST HAS TO BE "backend")) FRONTEND to connect Backend
+ ** in default network dns will work --> no in default network we dnf components will not ther 
+    it  works in custome network
+	
+* docker network ls ----> to check the brigde name created or not .
+(docker run -d --name mysql --network expense mysql:v1) ---> contaier mysql
+* docker inspect mysql --> check ip address is created or not.
+
+* For frontend you need to give the port 80:80 also.
+(docker run -d -p 80:80 -name frontend --network expense frontend:v1)
+
+
+c. Overlay :-- it will be Between Mutiple docker hosts 
+               (if you want to communicate with one or more server containers )
+
+  
+ 
+1. Network : use docker network help to follow .
+ ---------
+ **docker network create expense**
+ . exmpl:- docker network create expense (in place of  expense u acan add your project name)
+
+
+** check the default mysql network to expense network **
+
+** we need to remove backend contaier and place to network backend*
+  (** docker run -d --network expense --name backend backend:v1***) 
+  
+ (( after palcing in network check dockker ps. (mysql has be there)
+*** then check the logs ---> (docker logs backend ) 
+     .this has to work on
+    ({ "timestamp" : 1729246656, "msg" : "App Started on Port 8080" }
+	**means backend is sufficaly running**))
+	
+	
+. to install tellnet check the os 1st :-- cat /etc/*release
+.  *check the pretty name *
+	
+**check the backend is running ---> docker exec -it backend bash
+ 
+**docker network connect expense mysql**
+
+ .to check expense network is created or not ---> dockernetwork ls
+ . to check the  configure ---> ifconfig
+ 
+ . to remove all the contaiers ----> docker rm -f $(docker ps -a -q)
+ 
+ **curl https://raw.githubusercontent.com/Raidi13/expense-docker/refs/heads/main/install-docker.sh | sudo sh
+
+ 
+4.Disk  resize commands:-
+-------------------------
+.df -hT ---> it will show how much disk space allocated
+.lsblk ---->disk space
+.sudo growpart /dev/nvme0n1 4 ------> growpart to resize the existing partition to fill the available space.
+.sudo lvextend -l +50%FREE /dev/RootVG/rootVol---->
+.sudo lvextend -l +50%FREE /dev/RootVG/varVol-----> } Logical Volumes Decide how much space to allocate to each logical volume
+. sudo xfs_growfs / ----> extending the logical volumes, resize the filesystems to utilize the additional space.
+. sudo xfs_growfs /var -------> For the /var filesystem
+
+
+
+
+
+6.volumes :-
+------------
+so here the contaiers are ephemeral (temporary).once you remove contaiers you lodata is not persisted by default.
+this will keep all your data in proper name
+
+1.named volume: with docker command we can create docker volumes
+---------------
+  
+ * create :- docker volume create nginx-html--> this form volume named
+ * docker volume ls
+ 
+ you can give this command 
+ (docker run -d -v nginx-html:/usr/share/nginx/html -p 80:80 nginx)
+. check wether contaier is created or not : docker ps
+
+
+2.unnamed volumes: This unnamed volumes are not in control by docker.every thing we have to manager
+    like permession ,data
+  .if you remove the docker contaier also the data will be stored at given volume name.
+
+** come out from ec2 create a mkdir nginx-data.
+(docker run -d -v /home/ec2-user/nginx-data/:/usr/share/nginx/html -p 80:80 nginx)
+ this will save the data and it mount it to html
+ 
+ 
+  
+  
+8. expense-docker using named volumes and docker-compose:- if your application having multiple contaiers and if we need to manage them proprly we use docker-compose
+---------------------------------------------------
+*** create network , create volumes ,mysql ,backend ,frontend, ** 
+
+volumes:
+--------
+.create nginx-data  directory.
+.create a contaier of nginx-html
+.create mysql in named volumes so data is secure if deleat the contaier also data will be not removed
+. all the images we have  created we need to push them to docker hub
+  ( . docker login >> docker login -u raidi >>>> re-tag :docker tag mysql:v1 raidi/mysql:v1
+	(like that create ,backend,frontend also)
+
+. docker rmi raidi/backend:v1 ---> if you remove  the tags (check :docker images)
+
+.docker push raidi/backend:v1 --> then  push them docker hub (mysql,backend,frontend)
+
+.check docker-compose-yaml file twise 
+
+
+
+* then we need to re tag :-- docker tag mysql:v1  raidikartheek/mysql:v1 (like that)
+* then we need to re tag :-- docker tag backend:v1  raidikartheek/backend:v1 (like that)
+* then we need to re tag :-- docker tag frontend:v1  raidikartheek/frontend:v1 (like that)
+
+*if the images went to docker hub u no need to create again new images*
+(docker push raidikartheek/mysql)
+(docker push raidikartheek/backend)
+(docker push raidikartheek/frontend)
+
+
+** if you want do down use: docker compose down 
+ it will be in reverse fromat,backend,mysql
+
+
+**all this good  if run this in docker server contaiers  we will face lot of issues 
+ we can use docker for build the image and contaiers 
+ but it is not scalable to run contaiers in docker that why we have kubernetis.
+ 
+ 
+. intv:q:-
+
+ 1. tell us about docker compose
+ A, docker compose is the way of manageing the  multiple contaiers at a time we can make them up and down 
+   contaiers at time we can create the dependencys and we can mention the volumes..
+   
+.
+
+21/10/24
+-----------
+toipcs :-docker volumes,docker-compose,docker-networking.
+
+. /var/lib/docker :- docker directory
+
+Docker-Best-practice :- . image 
+--------------------------
+
+. which image has less memory  : Alpine max size 10 to 15 mb
+
+
+1. Use Official and Verified Images:-
+   --------------------------------
+
+. Official Images: Start with official images from Docker Hub when possible, as they are maintained and updated regularly.
+  
+  Minimal Base Images: Use minimal base images (like alpine) to reduce the attack surface and image size.
+  
+. exmpl: check docker images backend size is more then 1.11gb we  need to reduce the size of this
+   .use alpine3 and version of node 
+   . build the image tag for backend and check the image.
+   
+ 2. Run as Non-root user :- Non-Root User: Create and run containers with a non-root user to improve security. 
+ -------------------------- you can add a user in the Dockerfile using RUN useradd -m myuser and switch to that user with USER myuser.
+ 
+ . check the root access ---> docker exec -it backend sh 
+ . if it is a root user this not to use
+ . create normal user for this
+ . in alpine you shouid create a grop and user
+ .(RUN addgroup -S appgroup && adduser -S appuser -G appgroup)
+ exmlp : (RUN addgroup -S expense && adduser -S expense -G expense)
+ 
+ .and use shouid give access for expense 
+ . to check the owner ship use command ---> run chowh -R 
+   exmlp : (RUN chown -r expense:expense /opt/server)
+  
+ . at list 1 instruction before we need to give user details 
+ 
+ .  and re build the image tag
+ 
+ . check it is root user or not again ---> docker exec -it backend sh.
+ 
+
+ 
+3. Optimize Layer Caching:-
+-------------------------------
+   
+   * why image layering ?
+ A, as a simple example assume that milion of users are  using docker not every one will push there chnages to docker hub
+    here 1 is using 5gb for there image and 2nd person is using 8gb and etc does docker have that much space for storage.
+    to over come that docker will use layer's to save the build time and memory.
+   
+   
+   
+ . example :-how layering works
+ 
+ * From :Node ---> this will pulled from docker hub
+       . docker create a contaier from  1st instruction and runs 2nd  instruction inside it --(c1)
+	   .expose 8080(i1)
+	   .once 2nd instruction runs it wil create a image from this comtainer --(i1)
+	   .docker create  a contaier form (i1) image ,c2
+	   .runs 3rd instruction inside c2 comtainer
+	     (ENV DB_HOST='mysql'
+	   . docker create and image from c2 comtainer that is (i2)
+	   
+	   
+	   
+	   .* image layer will push to docker hub and containers will be  deletead 
+ 
+ . . to check every step how it is running use ----> DOCKER_BUILDKIT=0.
+   . if you want to remove the duilbkit --> unset DOCKER_BUILDKIT=0
+ 
+ . docker images are layer based and images are immutable.
+ . frequently changing instruction shouid be  in bottom of the dockerfile.
+ 
+ 
+ 
+ what is image layering ?
+ 
+.docker images are working based on layers..
+.every instruction creates intermediate container and run the next instruction inside it
+.then it saves the container as image layer, intermediate container will be deleted
+.to run next instruction docker creates intermediate container again from this image
+.it goes on, at each step intermediate containers are removed
+.each layer is cached, when you push  it pushes the layers
+
+5,multi stage docker builds :- we are using multi stage docker builds in muti stage docker we have two docker files inside
+  -----------------------     inside one docker file no.one is used as builder we will copy the output from  1st docker file and save it into second docker file.
+
+.development and running :-- 
+
+JDK, JRE
+JDK --> Java development kit
+JRE --> Java runtine environment
+.jar file is the output of build
+for nodejs project we get node_modules as build, now we need our code and node_modules
+
+JDK > JRE. JRE is subset of JDK
+
+npm install --> node_modules --> usually creates some cache
+
+
+it looks like 2 dockerfiles inside 1..
+
+1 dockerfile we use it for build
+
+we copy the output in 2nd dockerfile
+
+we restrict docker for image building, running the images as containers we will use kubernetes
+   
