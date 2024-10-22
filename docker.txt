@@ -536,3 +536,11 @@ we copy the output in 2nd dockerfile
 
 we restrict docker for image building, running the images as containers we will use kubernetes
    
+Docker architecture
+----------------------
+client --> docker command
+docker host/daemon --> docker service running
+
+docker run -d -p 80:80 nginx
+docker daemon checkes whethe image exist local or not, if exist it will run
+if not exist, it will pull registry/hub, create a container out of it, run it and send the output to the client
