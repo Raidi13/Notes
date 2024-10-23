@@ -538,9 +538,34 @@ we restrict docker for image building, running the images as containers we will 
    
 Docker architecture
 ----------------------
-client --> docker command
+client --> docker command line
 docker host/daemon --> docker service running
 
-docker run -d -p 80:80 nginx
+docker run -d -p 80:80 nginx 
 docker daemon checkes whethe image exist local or not, if exist it will run
 if not exist, it will pull registry/hub, create a container out of it, run it and send the output to the client
+
+
+mysql directory :
+
+/var/lib/mysql
+/var/lib/mysqld - conffiguration 
+/docker-entrypoint-initbd.d - scrpits 
+
+. genneraly we keep databases out of containers.
+
+.what are the disadvantages in docker :-
+****************************************
+
+* Ther is no relibility since the is only one docker host.
+* there is no autoscaling
+* there is no load balancing.
+* volumes are inside docker host  are in poor volume management
+* secutity and no secret management.
+* no communication b/w containers in another host  and network management is not good
+
+  * Due to  this cases we are using orchestration . 
+    for docker we have docker swarm all this future are little poor and tougfer in management as well 
+	in kubernetes we can do easly .
+	
+   
