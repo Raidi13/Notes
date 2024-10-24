@@ -83,11 +83,6 @@ docker file
     we have FROM,RUN,CMD,ENTRYPOINT,COPY,ADD,ENV,ARG,WORKDIR,USER
 
 
-
-10/15/24
--------------
-
-
 From :
 ------ 
 from shouid be the first instruction in docker file. it represents base os
@@ -161,11 +156,7 @@ add also does same as copy but it has  2 extra capabilites
 to deleat the containers ---> docker rm -f docker ps -a -q
 if you want the list of containers u r using ---> docker ps -a -q
 
-
-10/16/24
---------
-toipc :docker instructions
----------------------------
+--------------------------
 ENTRY POINT:
 ------------
 1.CMD can be overridden at runtime
@@ -417,15 +408,13 @@ volumes:
  but it is not scalable to run contaiers in docker that why we have kubernetis.
  
  
-. intv:q:-
-
+. intv:q:- refers
+----------------
  1. tell us about docker compose
  A, docker compose is the way of manageing the  multiple contaiers at a time we can make them up and down 
    contaiers at time we can create the dependencys and we can mention the volumes..
    
 .
-
-21/10/24
 -----------
 toipcs :-docker volumes,docker-compose,docker-networking.
 
@@ -551,6 +540,16 @@ mysql directory :
 /var/lib/mysql
 /var/lib/mysqld - conffiguration 
 /docker-entrypoint-initbd.d - scrpits 
+
+*******
+FROM mysql:8.0
+ENV MYSQL_ROOT_PASSWORD=ExpenseApp@1
+RUN groupadd expense && \
+    useradd -g expense expense && \
+    chown -R expense:expense /var/lib/mysql /var/run/mysqld /docker-entrypoint-initdb.d
+ADD scripts/*.sql /docker-entrypoint-initdb.d
+USER expense
+*********
 
 . genneraly we keep databases out of containers.
 

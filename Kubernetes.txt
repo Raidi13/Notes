@@ -22,6 +22,11 @@ mysql directory :
     for docker we have docker swarm all this future are little poor and tougfer in management as well 
 	in kubernetes we can do easly .
 	
+
+  *Orchestration
+  --------------
+   :-refers to the automated arrangement, coordination, and management of complex software systems, often using containers (like Docker). 
+  Orchestration helps manage how and where containerized applications run, ensuring they scale properly, communicate effectively, and are highly available.
     
  -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
                                       Kubernetes
