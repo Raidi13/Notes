@@ -6,6 +6,14 @@ Topic : kubectl install , eksctl install , configuration file.
    :-refers to the automated arrangement, coordination, and management of complex software systems, often using containers (like Docker). 
   Orchestration helps manage how and where containerized applications run, ensuring they scale properly, communicate effectively, and are highly available.
     
+
+    1.install disk re-size to 50
+    2.install docker.
+	3.install ksctl
+	4.install eksctl
+	5.aws configure
+	6.create eksctl cluster (eksctl create cluster --config-file=eks.yaml)
+	7. eksctl delete cluster --config-file=eks.yaml ---> to delete the cluster.
  -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
                     Kubernetes (master node architecture)
 									  **********

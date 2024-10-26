@@ -579,3 +579,21 @@ assignment
 3. you need to add extra disk to the running instance
 4. make sure docker directory /var/lib/docker is mounted to new disk
 5. migrate existing data to new mount 
+
+
+.This wil check dockerfile is exit in path or not.
+ (ls ~/expense-docker/backend
+  ls ~/expense-docker/frontend
+  ls ~/expense-docker/debug
+ )
+
+ .find . -name "dockerfile" :- this will specify path LOCAION
+ 
+. ( docker build -t raidi/debug:v1 -f ~/expense-docker/debug/Dockerfile ~/expense-docker) :-mismatch of docker file name.
+
+
+
+.mv ~/expense-docker/debug/dockerfile ~/expense-docker/debug/Dockerfile
+
+.Build from the specified directory: If the Dockerfile is in a subdirectory (like debug), you can specify its path using the -f option:
+.docker build -t raidi/debug:v1 -f ~/expense-docker/debug/Dockerfile ~/expense-docker
