@@ -1,37 +1,21 @@
 Topic : kubectl install , eksctl install , configuration file.
 
-mysql directory :
-
-/var/lib/mysql
-/var/lib/mysqld - conffiguration 
-/docker-entrypoint-initbd.d - scrpits 
-
-. genneraly we keep databases out of containers.
-
-.what are the disadvantages in docker :-
-****************************************
-
-* Ther is no relibility since the is only one docker host.
-* there is no autoscaling
-* there is no load balancing.
-* volumes are inside docker host  are in poor volume management
-* secutity and no secret management.
-* no communication b/w containers in another host  and network management is not good
-
-  * Due to  this cases we are using orchestration . 
-    for docker we have docker swarm all this future are little poor and tougfer in management as well 
-	in kubernetes we can do easly .
-	
-
-  *Orchestration
+ 
+ *Orchestration
   --------------
    :-refers to the automated arrangement, coordination, and management of complex software systems, often using containers (like Docker). 
   Orchestration helps manage how and where containerized applications run, ensuring they scale properly, communicate effectively, and are highly available.
     
  -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-                                      Kubernetes
+                    Kubernetes (master node architecture)
 									  **********
-
+      
+. kubernetes :-
+-------------
+ * 1 master will be there it will communication with multipual nodes.
+ * to communication with master we have command line called kubectl.
+ * to create we have eksctl offical cluster .
+ 
 . Commands :-
 *************
 * kubectl ---> k8 client command ( just like mysql command line)
@@ -50,33 +34,36 @@ mysql directory :
  
  . install kubectl : 
  *****************
-    *curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.31.0/2024-09-12/bin/linux/amd64/kubectl
+  *curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.31.0/2024-09-12/bin/linux/amd64/kubectl
 	* chmod +x ./kubectl
-    * sudo mv kubectl /usr/local/bin/kubectl ( if you worngly enter use *sudo mv /worng path /correct path )mv is move
+  * sudo mv kubectl /usr/local/bin/kubectl ( if you worngly enter use *sudo mv /worng path /correct path )mv is move
 	* kubectl version 
 
- . install eksctl:-
+ . install eksctl:- *****( 1st run this eksctl create cluster -f eks.yam )****************
    **************
 
-    * ARCH=amd64
+  * ARCH=amd64
 	* PLATFORM=$(uname -s)_$ARCH
 	* curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz"
 
 	# (Optional) Verify checksum
 	   curl -sL "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_checksums.txt" | grep $PLATFORM | sha256sum --check
 
-	*tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz
-	* sudo mv /tmp/eksctl /usr/local/bin
+	* tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz
+	* sudo mv /tmp/eksctl /usr/local/bin # this command can run any one.
 	* eksctl version
-	. run aws conffiguration 
+	* Aws configure  (Run the conffiguration and give access key & id)
  
- 
- . spot instances:-
+ .cluster File :-
+ **************
+  (refers eks.yaml)
+
+ . spot instances:- (spot = true)
    ***************
    . spot instances are unused capacity in data centers that will be give as 90 % discount.\
-      when aws required capacity to ondemand client they take back instances with in 2 mins
-	  
-	. Those spot instances we can use in dev enivorment and Q/a .
+      - when aws required capacity to ondemand client they take back instances with in 2 mins
+	 
+   . Those spot instances we can use in dev enivorment and Q/a .
 
   .conffiguration file:-
   **********************
@@ -104,58 +91,177 @@ mysql directory :
              (for a project there will be dedicated location that we have to use)
 		
 		
-		apiversion: v1
+apiversion: v1
 kind: Namespaces
 metadata:
    names: expense
    labels:
     project: expense
     enviroment: dev
+
 	
-	. command to apply :- kubectl apply -f 01-namespace.yaml
-	  -------
-    . to view the name spaces  ---> kubectl get namespaces
-	. if you want to delete   -->kubectl delete -f namespace
+. command to apply :-
+	****************
+  . How to create ------> kubectl apply -f 01-namespace.yaml
+  . to view the name spaces ---> kubectl get namespaces
+	. if you want to delete --->kubectl delete -f namespace
 	
- .pod :- is the smallest deployable unit in kubernetes . pod can contain one or many containers.
- *****
+. pod :- is the smallest deployable unit in kubernetes . pod can contain one or many containers.
+  *****
   command :- kubectl apply -f 02-pod.yaml
   -------    kubectl get pods
 			 
 	How can you login to running pod :- kubectl exec -it  nginx --bash .
-	
+                                      (curl local host)
 			 
-  . pod vs containers :-
+  . pod vs containers :- (refers 02-pod.yaml)
     *****************
     1.pod is the smallest deployable unit in kubernetes.
     2.pod can contain one or many containers.
     3.Container in a pod can share same network identity and storage
-	4 This are use in sidecar and proxi patterns .
+	  4.This are use in sidecar and proxi patterns .
  
- . multi-containers.yaml:-
+ . multi-containers.yaml:- (refers 03-multi-containers.yaml)
   ***********************
   
-  .can to pod have same name :- No it is a conflite
+  . can two pod have same name :- No it will be a conflite
   
-  exmpl:- pod 1 have nginx container is there
-		  pod 2 can have  nginx container or not    
+  exmp l:- pod 1 have nginx container is there
+		       pod 2 can have  nginx container or not    
 		  
-	A , the identity of 1st nginx is pod 1 as well the identity 0f 2nd nginx is pod 2 
-	    this names are diffrent inside anything can keep .
+	Ans:- the identity of 1st nginx is pod 1 as well the identity 0f 2nd nginx is pod 2 
+	      this names are diffrent inside anything can keep .
 		
 	exmpl 2 :- pod 2 name with  nginx
 	           nginx with name  also nginx
-			   
+
    ** crashloop backoff:-
    **********************
-   
    . Container is not able to start with out this kubernetes will not there it will re-start.
    
    .if you face error (pod update may not change fields other that) at this time delete the container 
     and re-build.
-	 ( kubectl delete -f 03-multi-containers.yaml)
-	 (kubectl apply -f 03-multi-containers.yaml)
-	 (kubectl get pods)
+	  ( kubectl delete -f 03-multi-containers.yaml)
+	  (kubectl apply -f 03-multi-containers.yaml)
+	  (kubectl get pods)
 	* u have two containers u want to login in to 1 container.
-	(kubectl exec -it multi-container -c almalinux --bash)
+	  (kubectl exec -it multi-container -c almalinux --bash)
+  * If you can to delete the cluster -->  eksctl delete cluster --config-file=eks.yaml
 
+  . sidecar :-
+   **********
+   form example in 1 server if 
+   . in multi contain asume you have 2 container (nginx & almalinux)
+     if the user hit nginx it has to give responce to them 
+
+  . 04-labels.yaml:- labels are used for kubernetes internal resources selectors
+	 ***************
+	 
+	   ** kubectl describe pod labels -----> information **
+	 
+	 . 05-Annotations :- are used for  kubernetes external resources selectors
+	   **************
+	   
+	 . 06-env :
+	 *********
+	 
+	   .env in image defiction vs env in manifest
+	   *****************************************
+	   
+	   . env in docker should rebuild if you change.
+	   . env in manifest no need to rebuild, just restart is enough.
+	   
+	   .Resources utilisation :-
+	   **************************
+	   .if something goes wrong in loop , it will occupy entire host resources . we need to 
+	    allocate resources to the containers .
+		
+		. 1 cpu = 1000m cpu
+		. soft limit ---> 100m cpu 68mi ram
+		. hard limit ---- > 120m cpu 128mi ram
+		*********************************************************************************
+		 our goal without toching the code, we need to change the values -----> varables
+		 *******************************************************************************
+		 
+		 . here in kubernetes we config-map 
+		 
+		 . config-map :-
+		  *************
+		  
+		  . To check the information like pod :- kubectl get configmap
+		  . To check inside the config :---> kubectl describe configmap  nginx-config
+		  
+		  .09-pod-config,yaml:-
+		  **********************
+		   
+		   . if edit the config in vim ----> kubectl edit configmap nginx-config
+		   
+		   .10-secret.yaml:-
+		   *******************
+		   
+		   . to keep the secret but it will visable for every one
+		   . create a secret in git bash :- echo "radi" | base 64 like that password
+		   . to de-code the secret echo secret-id" | base 64 --decode
+		   
+		   intv :Q :- * How can you access your pod in internet or outside ?
+					 A , by exposing to services. (service can act like dns to pod and load balancer)
+					 . pod ip are ephemeral (temp)
+					 
+		   .. services are 3 types:- services are use to communication with other pods.
+		   *************************
+		   1.cluster
+		   2.node port :- open a port on node
+		   3.load balancer :-
+		   
+		   . cluster ip is subset of nodeport , nodeport is subset of load balancer
+		   
+		   .kubectl get pods -o wide
+		   
+		   
+		   .SET'S :-
+		   *********
+		   
+		   . in sets we have 3 types 
+		     1, replica-set
+			 2, Deployment-set
+			 3, daemon-set
+			 4, statefull-set
+			 
+		     .pod is subset replica-set and replica-set is subset of deployment.
+		   
+		   .Replical-set:- makes sure your desire number of pods running all the time
+		    *************
+		   . specified number of pod replicas are running at any time. It’s primarily responsible for maintaining a stable set of replica pods,
+		    replacing any failed pods with new ones to match the desired count
+		   
+		   
+		   . it will select through selectors
+		   . if you delete the replica pod it will create in instace .
+		   . if you want to attach the service u need to attach pod labels.
+		   . replica set cant update the image version . its only responsibilities is to main describe number of replica. 
+		   
+		   . there is a disadvantages in replica when version change
+		   
+		   .Deployment-set:-
+		   ****************
+		   . deployment will create replica-set .so replica-set is a subset or a part of deployment.
+		   .when you update the image deployment make sure there is no down time it will create a new replica-set 
+		    and it will create the new pod and delete the old-pod
+			
+			.k8-expense :-
+			************
+			. in projects pod was not used directely because its very defacult to manage individual the better way is Deployment.
+			  and service
+			 
+			 .kubectl get pods -n expense ---> (if -n is not given it will take defacult namespace)
+			 
+			 *.to avoid -n we have kubens run this 3 commands .
+					  *sudo git clone https://github.com/ahmetb/kubectx /opt/kubectx
+					  *sudo ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx
+					  *sudo ln -s /opt/kubectx/kubens /usr/local/bin/kubens
+			 
+			 .kubectl exe -it pod id -n expense --bash ----> to check the info.
+			 .shotcut ---> kubectl get svc.
+			 
+			 .we dont have tellnet and local host in  because of minimual image
+			 .if to want we need to creater bdbug

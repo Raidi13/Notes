@@ -567,4 +567,15 @@ USER expense
     for docker we have docker swarm all this future are little poor and tougfer in management as well 
 	in kubernetes we can do easly .
 	
-   
+
+
+
+. setup
+--------------------
+assignment
+-------------
+1. there is a docker host running
+2. no space left on device
+3. you need to add extra disk to the running instance
+4. make sure docker directory /var/lib/docker is mounted to new disk
+5. migrate existing data to new mount 
