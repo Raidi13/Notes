@@ -1,0 +1,51 @@
+Terraform :- Terraform is an infrastucutere as code (lac) tool that allow user to create update and mange
+**********   and consistency in creating cloud resouces .
+
+ .crud :- we will use crude opperations like creating,read.update,deleting the infra.
+ ******
+ . Inventory/ resouces management :- If you see tf script, you know what are the services you are using
+ . Dependency management :- is easy we can create sg,ec2 instaces aftter creating of all the dependencys.
+ . cost management :- we can creating in 5mins,deletingin 5mins
+ . code reuse:- here we use Modules if you right the  code that can be used to many projects.
+ 
+ . To run terraform  we need aws cmd.
+ . what ever we in cloud that will be a resouces (like create the resouces, deleting the resouces,etc ,)
+ 
+ .Terraform :- using can connect aws,azure,gcp,alibaba,digital ocean, git hub,networking etc 
+ ***********    these are called providers. with out knowing the infrastucutere and how it works
+                 (refdocs: https://developer.hashicorp.com/terraform/docs)
+  .we will have the same conspects
+  . variables
+  . data types
+  . locals
+  . loops
+  . functions 
+			.datasources
+			.locals
+			.outputs
+			.providers
+			.provisoners
+			
+  .topic:- Creating sg&Ec2 instaces using terraform
+  **********************************************
+  .Terraform file extension is  .tf
+  .provider.tf --> 1st thing  you need  where you can declare what  provider you are using.
+  .install aws cmb and connect with aws configure key & password.
+  .create ec2 instance :- 1st create instance 
+                          t3.micro
+                          
+  *********************
+  .sg:-( 2st security group)
+   *****
+  . resouces "resouces-type" "resouces-name" {
+			key valu pairs
+			
+	}
+  .ingress --> noting but incoming traffic ( so we will check which port ,which id, the traffic is comming etc
+  .egress --> noting but outgoing traffic  ( no need to check its free to exit)
+  
+  . terraform init --> instialise terraform , it will connect with provider and downloads it. init where the tf file present
+  . keep .git ignore all ways to ignore large files
+  . terraform plan :--> cant  create resouces it will plan .
+  . terraform apply -auto-approve ---> it will apply the changes.
+  . terraform destroy -auto -approve ---> it will destroy the changes.
