@@ -49,3 +49,66 @@ Terraform :- Terraform is an infrastucutere as code (lac) tool that allow user t
   . terraform plan :--> cant  create resouces it will plan .
   . terraform apply -auto-approve ---> it will apply the changes.
   . terraform destroy -auto -approve ---> it will destroy the changes.
+
+  1.variables :-  variable is container that holds the value.
+  ***********
+  . we can keep all value in one folder but it tough to maintain 
+  
+  ** Tagging strategy
+ *************************
+ . project
+ . component/module
+ . environment
+ 
+ .expense is project 
+ *******************
+ . mysql
+ . backend
+ .frontend
+ 
+ .environment
+ ************
+ .prod
+ .dev
+ .Q/A
+ 
+ . terraform.tfvars :- using this file we can override the defauit values in variables
+  ******************    or else we can set the values also. 
+   . terraform.tfvars are default values
+   
+   . command line. (1st )
+   . terraform.tfvars.(2nd)
+   . environment variables.(3rd)
+   . default (4th)
+   
+  . conditions :
+  **************
+  
+  
+  .outputs :-every resouces exports some values, we can take them and create other resouces
+  *********
+  
+  .loops:-
+  *******
+      . count loop :- this will create no.of instances with same name
+	    . count.index will use in looping the instance names 
+		
+		
+  . Functions :- terraform has no custom functions we must use in-built functions
+  ***********
+      . merge function:- it will merge 2 lists (we use in project,name,environment ..repeted values)
+	   ---------------
+	   exmpl :- list-1 --> name=raidi course=devops
+				list-2 --> name=raidi , course=terraform
+				now what will be the outputs
+				
+				 name=raidi course= terraform (list 2 course will override list -1 )
+
+  
+  .route 53 (r53):- Amazon Route 53 (R53), is a Domain Name System (DNS) service from Amazon Web Services (AWS):
+   **************	you can set up Route 53 hosted zones, records, and other configurations.
+   
+   
+   .datasources:- data sources are used to fetch information from existing resources in your infrastructure or to
+	 ************ retrieve data from external sources without managing those resources through Terraform directly. 
+   
