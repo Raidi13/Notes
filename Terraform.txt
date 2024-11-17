@@ -1,20 +1,41 @@
-Terraform :- Terraform is an infrastucutere as code (lac) tool that allow user to create update and mange
-**********   and consistency in creating cloud resouces .
+1. in shell scripting we cant handle large number of servers at time and there is no scaliblity that why we used Ansible.
+2. in ansible it easy to do configurations.
+
+what terraform solves:-  manual infra
+---------------------
+
+How we are solving :- through script , infra asa code and we apply
+-----------------
+.terraform solves manual infra that every thing in console ,by mistake if someone edit worng then app will go down.
+ aplication restore back to previous stage.
 
  .crud :- we will use crude opperations like creating,read.update,deleting the infra.
  ******
- . Inventory/ resouces management :- If you see tf script, you know what are the services you are using
- . Dependency management :- is easy we can create sg,ec2 instaces aftter creating of all the dependencys.
- . cost management :- we can creating in 5mins,deletingin 5mins
- . code reuse:- here we use Modules if you right the  code that can be used to many projects.
+ . Inventory/ resouces management :-> If you see tf script, you know what are the services you are using
+ . Dependency management :-> is easy we can create sg,ec2 instaces after creating of all the dependencys.
+ . cost management :-> we can creating in 5mins,deletingin 5mins
+ . code reuse:-> here we use Modules if you right the  code that can be used to many projects.
  
  . To run terraform  we need aws cmd.
  . what ever we in cloud that will be a resouces (like create the resouces, deleting the resouces,etc ,)
  
+ . state management:-> Terraform can track what it created can update easily .
+ 
+ .Terraform :- Terraform is an infrastucutere as code (laac) tool that allow user to create update and manage
+ **********   and to maintain the consistency in creating cloud resouces .
+             
+			  .is a declarative way of createing infra (what we declare it will create)
+
+ 
+ .install terraform -->unzip-->cut and past terraform.exe in new folder-->add the path in environment verables 
+ .install aws command line ( msiexec.exe /i https://awscli.amazonaws.com/AWSCLIV2.msi ) 
+ 
  .Terraform :- using can connect aws,azure,gcp,alibaba,digital ocean, git hub,networking etc 
- ***********    these are called providers. with out knowing the infrastucutere and how it works
-                 (refdocs: https://developer.hashicorp.com/terraform/docs)
+ ***********   these are called providers. with out knowing the infrastucutere and how it works
+               (refdocs: https://developer.hashicorp.com/terraform/docs)
+  
   .we will have the same conspects
+  
   . variables
   . data types
   . locals
@@ -28,31 +49,35 @@ Terraform :- Terraform is an infrastucutere as code (lac) tool that allow user t
 			
   .topic:- Creating sg&Ec2 instaces using terraform
   **********************************************
-  .Terraform file extension is  .tf
-  .provider.tf --> 1st thing  you need  where you can declare what  provider you are using.
-  .install aws cmb and connect with aws configure key & password.
-  .create ec2 instance :- 1st create instance 
-                          t3.micro
-                          
-  *********************
-  .sg:-( 2st security group)
-   *****
+  . Terraform file extension is  .tf
+  . provider.tf --> 1st thing  you need  where you can declare what  provider you are using.
+  . install aws cmb and connect with aws configure key & password.
+  
+  .sg:-( 1st security group)
+  *****
   . resouces "resouces-type" "resouces-name" {
 			key valu pairs
 			
 	}
+	. ec2: 2nd
+	
+ 
   .ingress --> noting but incoming traffic ( so we will check which port ,which id, the traffic is comming etc
   .egress --> noting but outgoing traffic  ( no need to check its free to exit)
   
   . terraform init --> instialise terraform , it will connect with provider and downloads it. init where the tf file present
-  . keep .git ignore all ways to ignore large files
+  . .git ignore --> all ways to ignore large files
   . terraform plan :--> cant  create resouces it will plan .
   . terraform apply -auto-approve ---> it will apply the changes.
   . terraform destroy -auto -approve ---> it will destroy the changes.
-
-  1.variables :-  variable is container that holds the value.
-  ***********
-  . we can keep all value in one folder but it tough to maintain 
+  
+  . tfvars:- to override default variables
+  ---------
+ 1.variables :-  .variable is container that holds the value. (how we will keep groserys in containers)
+  ***********    . we can keep all value in one folder but it tough to maintain 
+  
+  exmpl: x=1 , x=2 
+  
   
   ** Tagging strategy
  *************************
@@ -64,7 +89,7 @@ Terraform :- Terraform is an infrastucutere as code (lac) tool that allow user t
  *******************
  . mysql
  . backend
- .frontend
+ . frontend
  
  .environment
  ************
@@ -78,12 +103,20 @@ Terraform :- Terraform is an infrastucutere as code (lac) tool that allow user t
    
    . command line. (1st )
    . terraform.tfvars.(2nd)
-   . environment variables.(3rd)
+   . environment variables.(3rd) -var="instance_type=t3.large"
    . default (4th)
+   . promt (5th)
    
   . conditions :
   **************
-  
+  if(expressions) {
+		run this if experession is true
+	}
+	else {
+		run this if experession id false
+	}
+	or
+	experession ? "run this if true" : "run this if false"
   
   .outputs :-every resouces exports some values, we can take them and create other resouces
   *********
@@ -91,24 +124,573 @@ Terraform :- Terraform is an infrastucutere as code (lac) tool that allow user t
   .loops:-
   *******
       . count loop :- this will create no.of instances with same name
-	    . count.index will use in looping the instance names 
+	    . count.index:- will use in looping the instance names 
 		
-		
+		*(terraform console) it will take to terraform promt.
+  
+  .for_each :- for each is used to iterate map...
+  
+  .dynamic :- it used to control map that can be used in ingress 
+ -----------  we can't changes in ingress ports u can use
   . Functions :- terraform has no custom functions we must use in-built functions
   ***********
       . merge function:- it will merge 2 lists (we use in project,name,environment ..repeted values)
 	   ---------------
 	   exmpl :- list-1 --> name=raidi course=devops
 				list-2 --> name=raidi , course=terraform
+				list-3 --> name=kartheek ,course=aws
 				now what will be the outputs
 				
 				 name=raidi course= terraform (list 2 course will override list -1 )
 
+
+ .what we need to create for expense project 
+  . we need to create 3 ec2 instance
+  . r53 records
+     (mysql.aws-dev-rk.online --> pvt.ip
+	 (backend.aws-dev-rk.online --> pvt.ip
+	 (frontend.aws-dev-rk.online --> pub.ip
   
   .route 53 (r53):- Amazon Route 53 (R53), is a Domain Name System (DNS) service from Amazon Web Services (AWS):
    **************	you can set up Route 53 hosted zones, records, and other configurations.
    
    
    .datasources:- data sources are used to fetch information from existing resources in your infrastructure or to
-	 ************ retrieve data from external sources without managing those resources through Terraform directly. 
+	************  retrieve data from external sources without managing those resources through Terraform directly. 
+				  and query the information from provider like AMI ID  etc..
    
+   
+   .locals :-  locals are like varibles but it have some extra capability . you can store expressions 
+   *********    and intermediate values in locals.
+               
+               .variables can be overriden but we cant override locals.
+			   .count.index will not work in locals we have limitations .
+			   .locals can store expressions terraform can run them and get the values
+			   .locals can use variables inside varibles cant refer locals
+			   .can override varibles can't override locals
+			   
+	
+	. state  :-  terraform uses state concept to compaire declared vs actual/real infra .
+	***********
+	
+	1.declared-infra :- is a declarative way of createing infra (what we declare it will create)
+	---------------    .what ever we create in tf-file it will declare 
+	
+	2.actual-infra:- aws infra created
+	--------------
+	
+	   * declared-infra == actual-infra
+	   
+	   . so here terraform responsablity is what ever we created in declared-infra , the same infrastructure 
+         has to maintain in aws.
+
+	*terraform.tf-state:- terraform keeps track of what u created
+    *******************	
+	
+	what is refreshing state:- if some one  deleted the instance with out information you.
+	************************   .terraform.tfstate will be refereshed against real infra
+	
+	.aws_security_group.allow_ssh_terraform: Refreshing state... [id=sg-0994f93b69e9e3736]
+
+	before I delete
+	----------------
+	declared infra == actual infra --> true
+
+	After I delete
+	----------------
+	declared infra == actual infra --> false
+
+	terraform.tfstate --> instance created
+	real infra --> no, actually destroyed
+	config files --> create the infra
+	
+intv q:-	
+* Remote-state:- while working in a colabration environment if you dont maintain the state remotely
+---------------  then there will be chance of duplication and errors. for that we keep the state in remote location
+				 so that terraform can effictly compaire.
+				 
+				 . for remote-state in aws we will use s3 bucket.
+				 
+locking:- if two person in creating the same infrastructure at time so there is a chance of duplication 
+--------- and errors to avoid that terraform has created terraform.lock file
+          . for locking we will use dynamo bd
+		  
+		  
+provisoners :- provisioners are used to take some actions locally or remotely  in order to prepareing the servers.
+-----------    by default provisioners will run at the time creation .
+			  . if you want to destroy we need to use (when = destroy) first we need to destory in terraform then it will destory the packages
+
+local --> where terraform executed is local...my laptop
+remote --> inside the servers you created..inside the servers of backend, frontend, mysql. 
+
+
+Conistent infra across all env:-
+--------------------------------
+1. tfvars : it will create multi-environment using same code.
+2. terraform workspaces
+3. seperate repos
+
+either u r working in any environment (uat,dev,prod) the left side  arguements will change 
+rightside are values may not change
+
+for dev environment the traffice will low so u can use t3.micro
+for pod environment the traffice will hign so u use t3.large
+
+.dev.tfvars --> this shouid be for dev env 
+.prod.tfvars ---> this shouid be for prod env
+.keep  diffrent buckets for diffrent environment and diff key
+
+terraform-multi-env:-
+---------------------
+in tfvar-->dev-->backend  (so 1st we need to init in backend.tf(command (terraform init -backend-config=dev/backend.tf)))
+											when you are plan in tfvars ( terraform plan -var-file=dev/dev.tfvars)
+                                when you are apply also u need to give (terraform apply -var-file=dev/dev.tfvars -auto-approve)
+								when you are destroy also u need to give (terraform destroy -var-file=dev/dev.tfvars -auto-approve)
+								
+								
+						when u r running for production we need to -re configure (terraform init -reconfigure -backend-config=prod/backend.tf)	
+                       				when you are plan in tfvars	 (	terraform plan -var-file=prod/prod.tfvars)
+									 when you are apply also u need to give (terraform apply -var-file=prod/prod.tfvars -auto-approve)
+								when you are destroy also u need to give (terraform destroy -var-file=prod/prod.tfvars -auto-approve)
+from your expense infra
+
+we need 3 ec2,3sg,3r53 
+
+ 
+mysql-dev
+backend -dev
+frontend-dev
+
+mysql--dev.aws-dev-rk.online
+backend--dev.aws-dev-rk.online
+frontend--dev.aws-dev-rk.online
+
+mysql-prod
+backend -prod
+frontend-prod
+
+mysql--prod.aws-prod-rk.online
+backend--prod.aws-prod-rk.online
+aws-prod-rk.online
+
+
+terraform-workspaces :- only we have 1 advantage is code re-use 
+----------------------
+we have disadvantages also.
+--------------------------
+.it's not easy to do and not easy to implement .
+.if you are doing any mistake it will effict all environment or dev or prod
+.asume if code bigger day by day to manage them in workspaces or in tfvars will be a bit problem 
+.if by change in prodcution if we had error it make entire infrastructure down
+.we have another approch we can use seperate code for each environment
+
+intv Q:-
+-----
+how do create multi-env in terraform.
+A, there are 3 opptions 
+ 1. tfvars : if tfvars also have 1 disadvantages duplicated code even through we can consider it because our production will safe. 
+ 2. workspaces
+ 3. seperate code
+ 
+ 
+.module development:- module are dry concept (don't repet your self) it terated as a function pass the input and it will create the resouces for us.
+----------------------
+.in modules the resouces defnition and arguements are same .only value will be change.
+.you can write a code an call them many times.
+.update are easy and centralised
+.best practice can be enforced
+.you can restrict user using few options 
+
+exmpl:-(if  i tell the user to create the a service they will try to overright any thing in place of t3.micro they will take any large instance
+         so here i can use the best practice to use only t3.micro or t3.medium)
+
+       validation {
+        condition = contains (["t3.micro","t3.medium","t3.small", var.test_variable])
+        error_message = "instance type can only be ."
+    }
+
+.what ever we passing in terraform those are arguements (terraform-aws-ec2)
+.what ever we passing in modules those are called values (ec2-module-demo)
+
+. we can create variable in both .
+
+
+.vpc:--> virtual pritave cloud.
+------------------------------
+. it is a isolated datacenter in cloud resouces created inside vpc is completely private.
+
+mysql server --> all users and orders data
+backend service --> secure public  shouid not access this dont create public ip  and no internet
+frontend :--> public must access this dont create public ip  and no internet
+
+
+. village,pin code --> vpc name,cidr
+. streets,number --> subnets name ,cidr
+. road --> routes
+. mainroad ---> internet connections ,internet gateway
+. main gate of house--> security groups/firewalls
+. house --> ec2 instance
+
+cidr--> classless interdomain routing
+
+.
+192.178.3.4 --> 4 octates
+
+255.255.255.255 --> Max IP
+
+10.0.0.0/16 --> CIDR
+
+total IP address bits are 32. possible IP address are 2^32
+
+10.0.0.1
+10.0.0.2
+.
+.
+.
+10.0.0.255
+
+10.0.1.0
+10.0.1.1
+.
+.
+.
+10.0.1.255
+
+2^16 = 65,536
+
+10.0.0.0/24 --> first 3 are blocked
+
+10.0.0.255
+
+10.0.1.0/24 --> 10.0.1.0 ... 10.0.1.255
+10.0.2.0/24 --> 10.0.2.0, 10.0.2.1 .... 10.0.2.255
+
+10.0.1.0/32
+
+intv :q:-
+public and private subnet
+-------------------------
+.subnet which has internet connection is called as public subnet. 
+.private/app subnet will not have internet connection as routes. 
+.database subnet is also called as private subnet
+
+
+. to destory every thing (for i in $(ls-dr */); do echo ${i%/}; cd ${i%} ; terraform destory -auto-approve ; cd .. ; done)
+. to apply every thing ( for i in $(ls-d */); do echo ${i%/}; cd ${i%} ; terraform apply -auto-approve ; cd ..; done)
+.( for i in 10-vpc 20-sg 30-bastion 40-rds 50-app-alb 50-vpn; do cd $i ; terraform apply -auto-approve ; cd ..; done )
+.( for i in 50-vpn 50-app-alb 40-rds 30-bastion 20-sg 10-vpc; do cd $i ; terraform destroy -auto-approve ; cd ..; done )
+
+
+vpc-connections:-   ( connect to vpn  ssh -i ~/.ssh/openvpn openvpnas@52.201.233.163 )
+
+********************
+create vpc
+create igw and associate with VPC
+create public, private and database subnets
+create public, private and database route table
+create routes inside route table
+associate route tables with appropriate subnets
+created elastic IP
+created NAT gateway
+added NAT routes in private and database subnets
+
+secure servers can't be reached directly...this is incoming/ingress traffic
+traffic from the servers ... outgoing/egress traffic
+
+.database --> yum install mysql-server --> outgoing
+
+what is NAT --> this is the mechanism private servers connects to internet for 
+                outgoing traffic like packages installation, security patches downloads
+
+NAT --> when server stops and starts IP address will change.It should have same IP always
+         in aws we call as elastic ip
+		 
+		 
+.High availability :-
+-------------------
+.hyd --> region
+east hyd ---> AZ
+west hyd ---> Az
+
+.1 public subnet in us-east-1a, 1 public subnet in us-east-1b
+.private subnet in us-east-1a, 1 private subnet in us-east-1b
+.database subnet in us-east-1a, 1 database subnet in us-east-1b
+
+
+For any project this steps are common to create vpc:-
+*****************************************************
+.Create VPC -> 10.0.0.0/16 --> 2^16 IP address
+.Create igw
+.create subnets --> Public, private and DB
+.associate igw to vpc
+.EIP
+.NAT
+.created route tables and added routes
+	Public --> Internet connection through IGW
+	Private --> NAT, egress connections
+.route table associations with subnets
+
+.terraform naming resouces:-
+****************************
+
+1. terraform resource name --> use _, no upper case
+2. dont repeat resource type in name
+3. if only one resource of its type, name it as main or this
+4. Use - inside arguments values and in places where value will be exposed to a human
+5. use plural if multiple resources
+
+https://www.terraform-best-practices.com/naming
+
+
+.Peering:- by defauit vpc are not connected with each other here vpc peering can establish b/w 
+---------   but we have one condition vpc cidr shouid be diffrent they shouid not over plan
+			
+			edit route -->default vpc cidr -->peering connection
+
+. perring :- ask the user whether he want vpc peering or not . if he say yes our module will connect with defauit vpc
+
+same account:-
+------------
+.Same region and diff vpc can peer
+.diff region and diff vpc can peer
+
+diff account:-
+------------
+.diff account same region diff vpc can peer
+.diff account diff region diff vpc can peer
+
+.terraform -security group :- 
+----------------------------
+.to  reduce no of refreshing call to aws (vpc-->sg-->mysql-->backend-->frontend) 
+  we need to this in seperate-seperate repos.
+ .if you have a big project also u can maintain same kind of seperate-repos
+ . like 10-vpc,20-sg-30-bastion.etc (order createing the infrastructure)
+   so why 10-20 i am giving in future if have any other dependencys to add you can add over ther like 11.12,13)
+ 
+
+ssm-parameter-store:- it will save the key values configuration data, secrets, and other parameters for your applications
+-------------------
+1. so vpc has to store the parameters in  ssm.
+
+
+.Bastion:- Is notting but get the access to private servers we will create bastion host in public subnet
+---------  we will connect bastion host 1st from that we can connect to private instance. is a secure gateway or an intermediary server in a network
+	        also called jump-server
+
+
+RDS:-relation database service 
+*******************************
+
+.Statefull :- which it has state (exmpl: data base) ,stateful it keep track of the data it very cru
+----------    statefull applications are always restore safely.
+
+.stateless:- which dont have state. stateless applications dont have the data it have some 
+----------   there may be some problem
+
+RDS:-relation database service 
+-----
+1.we have dedicated rds higly avalible instances production we have automatic monotring 
+  we automatic storgae enabled, automatic snapshots are enabled, auto miner version is also avalible 
+
+load balancer:-  Distributing the load to target group 
+--------------
+team--> target group
+team lead --> load balancer
+listener and rules--> he is listening for ui work, backend team lead is listening for backend work.
+who is avalible-->  health check
+members --> servers
+
+
+. from frontend loadbalancer you need to accepct 80 to frontend server.
+. backend loadbacker will accepct backend server
+
+.Host path and context path:-
+-----------------------------
+
+client --> BA--> Architect-->-->
+backend--> backend lb--> backend 
+frontend --> frontend lb--> frontend Tl
+database-->bd 
+(in user data we have sudo access by default)
+
+Auto scaling:- 
+-------------
+JD --> lAUNCH TEMPLATE (options to create servers) --> place them inside target group.
+
+
+project infra:-
+-------------
+.vpc--> vpc will not change frequently
+.sg --> Sg may not change, only rules may change
+.bastion --> no chnages
+.db--> No
+.load balancer --> no
+
+Applications :-
+------------
+Ec2 instances
+target group
+
+
+Vpn:- Vpn is forward proxi and we use vpn for compny  server to be secure access .
+---   can monotring the traffic
+
+.forward-proxi
+.reviers-proxi
+
+Vpn is forward proxi
+
+.to connect the vpn  in new window(ssh -i ~/.ssh/openvpn openvpnas@public_ip
+.VPN SG, VPN SG Rules
+create key pair for VPN access
+VPN instance with Open VPN
+openvpnas is the user name
+configure with default options
+https://35.170.248.89:943/admin
+openvpn, Admin@1234
+
+download openvpn connect
+https://35.170.248.89:943
+openvpn Admin@1234
+
+Backend
+--------------------------
+1. create ec2 instance
+2. configure with backend 
+
+if there is a new version
+-----------------
+I can connect all the instances using ansible and run the playbook
+
+stop the server
+remove old code
+download new code
+restart the server
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+60-backend:-
+-----------
+
+if there is traffic increase
+-------------------
+1. create ec2 instance
+2. configure with backend
+			You should have playbooks ready
+			remote provisioner
+			terraform variables --> Shell --> ansible
+			ansible-pull
+
+.configure using ansible:- create ansible server and provide  backend ec2 instance ansible can connect to it. 
+                           ( we need to provide the defalut = true beacause when we are restarting the backend ami will not lanch )
+
+.stop the instance
+
+.take AMI --> Launch template
+
+.launch it using autoscaling 
+
+.we can delete the instance
+
+.create the lAUNCH-template
+  ami,network,sg,etc..
+
+.create the target group. (we need to connect to vpn and make some changes)
+
+
+.create asg(auto-scalling-group) using template and place them in Tg(target group)
+  .auto scaling inpute is lanch templet
+  .we need to launch template (backend-->ami-->instaces type --> no key pair -->  shutdown terminate
+
+.create alb rule in loade balancer (r53--> alb--> listener--> rule--> traget group--> health check--> instance)
+
+.create ansible server and provide backend ec2 instance
+.anisble can connect to it
+.R53 --> ALB --> Listener(80,443) --> Rule(host based routing) --> target group --> Instance
+
+.ACM --> we should have domain
+
+.request for the certificate
+.create records in domain
+.validation
+
+.expense-dev.daws81s.online
+
+.504 --> Gateway timeout
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+. for provisioners  we can use remote and we need to connect anisble server.
+ (how we will connect to from terraform to ec2 server ) we use provisioners
+ 
+ . null resource --> it will not do anyting mens it wont create any resouces 
+   but useful for provisioners to.so it will trigger we the instance id when changes.
+   
+.terraform variable--> shell --> Ansible
+. we had passed the scripting from terraform to shell then ansible.(anisble -pull)
+
+
+
+.if you have existing folder how can you make it as git repo:-
+*************************************************************
+ we need to install git 
+ .git init
+ 
+ . git branch -main
+ 
+.terraform-taint:- is noting but forcing to re-create during the nxt terraform apply
+------------------- like( terraform taint null_resource.backend)
+
+
+.terraform-target :- it will target specfic block (terraform apply - target =(id_name)
+-------------------
+
+Rolling update
+-----------------
+4 instances --> 2 instances
+
+1. stop all the backend services in all instances and update the application using ansible
+2. create one new instance using new version, once this is up, delete one old instance	
+	create second instance and delete one more old instance
+	create third instance and delete one more old  instance
+	create fourth instance and delete one more old instance
+	
+	
+70-acm:-
+-------
+	
+	
+	
+CDN:- cloudfront is content delivery network service of amazon . 
+----   aws have edge locations to cache the  content across the globe . we can make use of this service to reduce latency to our 
+       customers..
+	   
+user --> isp caching server --> torrents
+origin --> where is your source it can s3,alb,api gateway ,etc
+cache --> how and what you want to cache
+invalidations -->  where there is a update , you can create invalidation so that edge.
+			       location pull the content newly.
+				   
+cache order:-
+-------------
+/image/* --> expense.cdn.aws-dev-rk.online/images/* ---> it will cached
+
+
+expense-infra-creation:-
+-----------------------
+1. vpc we have developed the vpc and we have used the our own module in that we have created vpc
+2. we have created 2 availability-zones 1a,1b  and public-subnet,private-subnet,db-subnets
+   in public-subnet we have used  frontend instaces
+   in private-subnet we have used backend instaces
+   in db-subnets we have used RDS (Reletional database system)
+
+3. then we have created route tables,route,peering,nat gateway
+
+4. in security-groups we have tigth the sg  and bastion & vpn are almost same 
+   .for bastion we have connect to that server from server we need to access.
+   .and vpn we connect you laptop without login into sever we can check like 
+     load balancer urls & applications url we can check with vpn 
+
+5. next rds with out creating ec2 instance we have used the rds service beacause 
+   of many advantage like scalling ,storage ,loadbalancing,
+
+6. and we connected to vpn for vpn we have used openvpn we have take a image in vpn and we 
+   configure that just like ec2-instance and we have connected to openvpn and we are our desired location.
+   
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -1,3 +1,113 @@
+** old enterprise vs monolithic vs microservices
+**************************************************
+1.In old enterprise everything is together means frontend & backend may be teams are diffrent.if you are doing any changes in frontend or in backend you need to deploy both.
+   again they have to test and they have ready it for deployment at that  time the resource utilize is not that much good.
+
+2.In monlithic they have sepereted frontend and backend if u r making changes in frontend , backend is not effected these two are connected with api 
+	if frontend sends api request backend is responds with data in json format. so here some dependencys is reduce.
+	
+exmpl:- u can take e-commers like amazon or flipkart in that we have diffrent modules like .
+
+     user,cart,product,catlogue,shipping ,delivery , payments customers ,support,reviews ect...
+
+. if i keep all this modules in backend if have any change in user this entire module has to stop and re-deploy. 
+
+ .if there is even a small error in any module can bring the application down..
+
+3.microservices:- so now in microservices all this module are became indipendent application this all are connect wit apis.
+****************  if any small error come in application module the application server will not down.
+user
+cart
+catalogue
+shipping
+payments
+
+
+..in all this 3 which application is taking more space .
+  (old enterprise because forntend & backend are in we are keeping as one file it takes more size)
+ 
+ . in monolithic we have sepereted 
+ . in microservices we have divided  in small here the file size is every small.
+
+******* Here in this ceniro if one application size reduceing we dont need of heavy servers.****
+
+
+. and again  here we have bare metal  vs VM vs Containers
+
+ . 1. what are bare metal servers the server we have to setup we have to give network connections .
+      so nowdays  no one is using bare metal application 
+   
+ . 2.so how VM where created here they are logical divided bare metal server  in to VM'S
+     (exmlp: if you amazon data center how we are getting VM'S underlaying they are using bare metal server ) 
+   
+   3. Containers is structure that makes containers lightweight, portable, 
+       and ideal for running microservices and distributed applications with
+      (bare minimal os + application run time + dependencys + packages + code)
+   
+      advantages of containers:
+	  ------------------------
+								  bare metal    |  vm    |contaiers
+	  1. the resource utilize is |     bad		| Average| good
+	  2.scalability is good		 | 	   bad		|Average | good
+	  3. cost 					 |   High		| medium | less
+	  4. reliabllity			 |	bad			| average| good
+	  5. performance			 | good         | low    | average
+	  6.portable				 |   no			| yes	 | yes
+	  7. security                | good			| low    | average
+	  8. auto scalling			 |   tough		| okay	 | easy
+	  
+   
+   example :-
+   joint family vs 4 mem family vs individual
+
+	independent house vs flat in apartment vs a pg room
+	bare metal vs VM vs containers
+
+	independent house
+	--------------------
+	advantages
+	-------------
+	privacy
+	more space
+
+	disadvantages
+	-------------
+	too much maintainance
+	electricity, water, internet, gas, etc.
+	construction time is very high
+	cost is also very high
+
+	flats in apartment
+	-------------------
+	advantages
+	-------------
+	less maintainance
+	electricity, water, etc. can be taken care
+	construction time is less
+	cost is less
+
+	disadvantages
+	--------------
+	less privacy
+
+	PG room
+	-----------------
+	advantages
+	----------
+	no maintainance
+	cost is veryyyyy less
+	flexibility is veryyyyyyy high.
+
+
+
+. for contaiers we use Docker 
+
+. AMI ---> Amazon mechine image --> we selected os(1GB)+ we configured (installation,code,services etc)
+
+. Docker image ---> bare minimal OS(10GB)+ we configured (installation,code,services etc)
+   (docker image is  bare minimal os + application run time + dependencys + packages + code )
+
+
 when docker is installed a group called docker is created
 
 add ec2-user to the docker group

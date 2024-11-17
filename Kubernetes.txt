@@ -12,8 +12,8 @@ Topic : kubectl install , eksctl install , configuration file.
 	3.install ksctl
 	4.install eksctl
 	5.aws configure
-	6.create eksctl cluster (eksctl create cluster --config-file=eks.yaml)
-	7. eksctl delete cluster --config-file=eks.yaml ---> to delete the cluster.
+	6.create eksctl cluster (  eksctl create cluster --> config-file=eks.yaml )
+	7.eksctl delete cluster --config-file=eks.yaml ---> to delete the cluster.
  -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
                     Kubernetes (master node architecture)
 									  **********
@@ -273,3 +273,94 @@ metadata:
 			 
 			 .we dont have tellnet and local host in  because of minimual image
 			 .if to want we need to creater bdbug
+
+
+.Volumes in kubernetes :- A Kubernetes volume is a directory containing data, which can be accessed by containers in a Kubernetes pod.
+**********************    The location of the directory, the storage media that supports it, and its contents, depend on the specific type of volume being used.
+									  (Storage always has to be outside the cluster that will be safe )
+			 
+			 exmp:- external Hd ---> offline near to our computer more speed
+			 ----   google drive ----> online somwwhere in network less speed
+			
+			
+			.so hear we have two types 
+			 1, EBS :- Elastic block store  ---> Static provisioning --> Just like Hard disk
+			 2, EFS :- Elastic file system  ---> Dynamic provisioning ---> Kubernetes will create volumes.
+			 
+				EBS :- 
+				-----
+				1, WE NEED TO CREATE THE VOLUMES .
+				2, WE NEED TO INSTALL THE DRIVERS.
+				3, EKS NODES SHOULD HAVE PERMISSIONS TO ACCESS EBS VOLUMES
+				 
+				 ( where the servers the disk also locate there it self ) us-east-1b
+				 (we need to create the volume of 20g in us-east-1b) rest we can describe later where it has to go.)
+				  (copy the volume id)
+				 
+				 
+				 .install drivers 
+				-----------------
+				(kubectl apply -k 
+				"github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.36") we need to install in eksctl.
+ 
+				 . we need to install EBS CSI DRIVERS. (CSI is kubernetes driver for our eks to access ebs) 
+				  (to check the drivers running ---> kubectl get pods -n kube-system)
+				  
+				  .( we need to attach policys AmazonEBSCSI driverpolicy.) in IAM roles.
+				  
+				***. Persistant Volume and Presistant volume claim :- (here kubernetes has create equvalent obeject or wappers to manage  underlying volume because k8 en
+				     ***********************************************   pv --> it represents the physical storage like EBS/EFS.
+					 
+					 . Now we need to create the Pv  (Persistant Volume)
+					   .ref (https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/master/examples/kubernetes/static-provisioning/manifests/pv.yaml)
+					   
+					 . block storage will connect to only 1 server not connect multi-servers . 
+					  
+					   .access mode:-
+					   *************
+					  ( .ReadWriteOnce
+						the volume can be mounted as read-write by a single node. ReadWriteOnce access mode still can allow multiple pods to access the volume when the pods are running on the same node. For single pod access, please see ReadWriteOncePod.
+						
+						.ReadOnlyMany
+						the volume can be mounted as read-only by many nodes.
+						
+						.ReadWriteMany
+						the volume can be mounted as read-write by many nodes.)
+						
+						policys:
+						*******
+						.Retain -- manual reclamation ( if the node is deleted data will be there)
+						.Recycle -- basic scrub (rm -rf /thevolume/*)(disk will not delete but the data will be cleaned)
+						.Delete -- delete the volume (if you delete the pv the data will be deleted)
+						
+					.pvc(Persistant Volume clam):- pods should claim pv to access that storage to Clame.(pvc) 
+					**************************** . what every storage you are giving to should provide the same.
+												 . after claming if you check kubectl get pv that status has to  be shown bound.
+												   or you can also describe and check (kubectl describe pv file_name)
+					
+					     .Node selectors:- it will select your desire location. 
+					      ****************  (we need to add in spec)
+					     
+						 . if you want keep tight protection  u can provide  specfic node port in service. 
+						 
+					. Admin actity :- this command will show all the resources in cluster
+					***************   (kubectl api-resources)
+					
+					1. is that namespace level or not?
+					
+					2. if not namespace level that is cluster level. admin should create the resource
+
+					expense project devops engineer got a requirement to have a volume
+					-----------------------------------------------------------------
+					1. you should an email to storage team to create disk. get the approval from manager. they create disk.
+					
+					2. you send email to k8 admin to create PV and provide them disk details.
+
+					no it's your turn. pvc and claim in the pod
+					
+					
+			2.Dynamic provisioning (efc) :- volume has to create dynamic when every that using storage class.
+			 ****************************
+			1. install drivers
+			2. give permissions to ec2 nodes.
+			
