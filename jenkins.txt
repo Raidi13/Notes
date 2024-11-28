@@ -1,0 +1,108 @@
+CICD:- Continous Integration 
+-----
+.For continous integration we will use Jenkins
+
+in old process manually deployment:-
+-------------
+.take one server -->git clone <url> --> npm install --> downloads dependencies -->npm test --> unit test cases
+                               sonar--> scan ,zip--> zip the application
+.store the application into  some other artifact server.
+
+*****.What is continous integration ?****
+ .it is the way of integration the code from source and create artifact .in between source
+  and creating artifact we need to install dependencies, run unit test cases scans etc .
+  insted of this manually we can automate through Continus Integration process .. 
+  we are using Jenkins for Continous Integration.
+  
+.Jenkins:- Jenkins is a plain webserver, if you install plugins then jenkins can connect 
+--------   with other tools. 
+
+Install:- take ec2 instance 
+-------
+sudo curl -o /etc/yum.repos.d/jenkins.repo \
+    https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+
+sudo yum upgrade--> skips this it will lot of time.
+# Add required dependencies for the jenkins package
+
+sudo yum install fontconfig java-17-openjdk
+sudo yum install jenkins
+sudo systemctl start jenkins
+sudo systemctl enable jenkins 
+
+.ip-address:8080 --> to configure the jenkins
+.copy the code and -->  sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+.take the key and past 
+.create user information and save the file.
+
+#sudo systemctl daemon-reload
+
+
+(Jenkins url
+( http://3.237.63.102:8080/ )
+
+(jenkins location m-repos:-sudo cat /etc/yum.repos.d/jenkins.repo)
+
+
+.jenkins will run on port 8080.
+.in Jenkins every thing is called as JOB. when you trigger it is called as build.
+. we have 3 stages in build
+  
+  .pre-build, build ,post-build.
+  
+.Pipeline:- is noting but Mutiple-stages creating like the output be comming input .
+----------
+Jenkinsfile (Declarative Pipeline)
+pipeline {
+    agent any 
+    stages {
+        stage('Build') { 
+            steps {
+                // 
+            }
+        }
+        stage('Test') { 
+            steps {
+                // 
+            }
+        }
+        stage('Deploy') { 
+            steps {
+                // 
+            }
+        }
+    }
+}
+.manage jenkins -->Available plugins --> pipeline stage view.
+
+this will show the stage view .
+
+.All the pipeline has to come from git and we need refer in jenkins
+
+.Master Agent Architecture:- In continous integration like jenkins environment master can't satisfy 
+---------------------------  all the requirments and all the work loads so can have diffrent types of agents with 
+							 with diffrent agents we can connect master vya SSH, you can provide agent ip-address
+							 and passwords you can provide some labels ,while trigger the pipeline we can menction
+							 which agent to run the pipeline.
+
+.Master :- master will assign the work to agents and it will collect the log and shows.
+
+.install for agent (sudo yum install fontconfig java-17-openjdk)
+
+.deleteDir()--> will delete used build to same memory
+
+.Jinkins logs:-
+--------------
+. /var/lib/jenkins -->Jenkins home
+
+
+.Triggers:-
+----------
+.When ever developer push to git, it should automatically trigger pipeline
+ we will call this as webhooks.
+
+.when ever developers  has push to git branches we will immeditly trigger jenkins pipeline through webhook.
+
+git hub -->go to repo-->webhook-->add-webhook-->payload url --> add jenkins url/github-webhook/
+and disable SSL
