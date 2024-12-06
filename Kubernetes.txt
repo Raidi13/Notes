@@ -1,27 +1,7 @@
-Topic : kubectl install , eksctl install , configuration file.
-
- 
- *Orchestration
-  --------------
-   :-refers to the automated arrangement, coordination, and management of complex software systems, often using containers (like Docker). 
-  Orchestration helps manage how and where containerized applications run, ensuring they scale properly, communicate effectively, and are highly available.
-    
-
-    1.install disk re-size to 50
-    2.install docker.
-	3.install ksctl
-	4.install eksctl
-	5.aws configure
-	6.create eksctl cluster (  eksctl create cluster --> config-file=eks.yaml )
-	7.eksctl delete cluster --config-file=eks.yaml ---> to delete the cluster.
- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-                    Kubernetes (master node architecture)
-									  **********
-      
 mysql directory :
 
 /var/lib/mysql
-/var/lib/mysqld - conffiguration 
+/var/lib/mysqld - daemon  conffiguration 
 /docker-entrypoint-initbd.d - scrpits 
 
 *******
@@ -38,20 +18,29 @@ USER expense
 .what are the disadvantages in docker :-
 ****************************************
 
-* Ther is no relibility since we have only one docker host.
-* there is no autoscaling
-* there is no load balancing.
-* volumes are inside docker host  are in poor volume management
-* secutity and no secret management.
-* no communication b/w containers in another host  and network management is not good
+* Ther is no relibility since we have only one docker host. 
+  (When relying on a single Docker host, if the host crashes or fails, all the running containers will be down )
+
+* in docker there is no autoscaling. while increase in traffic
+
+* there is no load balancing in docker . because its supports container communication within a single host,
+
+* volumes are inside docker host are in poor volume management
+
+* secutity and no secret management in docker
+
+* no communication b/w containers in another host and network management is not good
 
   * Due to  this cases we are using orchestration . 
   
-  * so orchestration is nothing but managing everything like deploying, scaling, and operating containerized applications. everything
-    
-	.for docker we have docker swarm all this future are little poor and tougfer in management as well 
-	in kubernetes we can do easly .
+  . for docker we have docker swarm all this future are little poor and tougfer in management as well 
+	  in kubernetes we can do easly .
 	
+  
+  * so orchestration is nothing but managing everything like deploying, scaling,
+     and operating containerized applications everything.
+    
+   
 setup:-
 ------
 assignment:-
@@ -63,7 +52,7 @@ assignment:-
 5. migrate exising data to new mount  
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-										 Kubernetes 
+										.Kubernetes. 
 										 **********
  
  
@@ -78,8 +67,8 @@ assignment:-
  **********
 
  * 1 master will be there it will communication with multipual nodes.
-  to communication with mater we have command line called kubectl.
-  to create  we have eksctl offical cluster .
+    to communication with master we have command line called kubectl.
+    to create  we have eksctl offical cluster .
  
 . Commands :-
 *************
@@ -149,15 +138,21 @@ assignment:-
  * eksctl create cluster --config-file=eks.yaml --> to create a cluster
   .internal cloud formation will create a stack.
  ---------------------------------------------------------------------------------
- Resources:
- -----------
+ Resources: component or object that can be managed or utilized in a system or environment to 
+ ---------- perform a specific function.
  
- Name spaces:-just like vpc you will have a dedicated isolated project to create your 
+ Examples of Resources Across Different Contexts:-
+ ------------------------------------------------
+ Cloud Computing (AWS, GCP, Azure):
+.Storage Resources,Networking Resources,Database Resources,Pods,ConfigMaps/Secrets,Nodes
+ Containers,Images,Volumes .
+
+  Name spaces:-just like vpc you will have a dedicated isolated project to create your 
  ***********  workloads/resources
              (for a project there will be dedicated location that we have to use)
 		      
 			  *1st we need to create the name space for the cluster .
-syntax:-
+syntax:- Namespaces
 ********		
 
 apiversion: v1
@@ -175,7 +170,8 @@ metadata:
 	
  
 .pod :- is the smallest deployable unit inside kubernetes . 
-******   pod can contain one or many containers.
+******  . pod can contain one or many containers.
+		. all Container in a pod can share same network identity and storage
 
         (pod is like a container but in kubernetes we call pod)
 
@@ -193,24 +189,32 @@ A, kubectl exec -it  nginx --bash .
     1.pod is the smallest deployable unit in kubernetes.
     2.pod can contain one or many containers.
     3.all Container in a pod can share same network identity and storage
-	4 This are use in sidecar and proxi patterns .
- 
+	4 This are use in sidecar and proxi patterns . 
+	
+	(in this case only we will use multi-container)
+    
+	. sidecar:- container is a helper container that runs alongside the main application container in the same Pod.
+      It complements or enhances the functionality of the main container without altering its codebase.
+	
+	. proxy :-container acts as an intermediary between the main container and external services or resources.
+
 .multi-containers.yaml:-
-  ***********************
+ ********************
 .can to pod have same name :- No it is a conflite
 
   
 exmpl:- pod 1 have nginx container is there
-		pod 2 can have  nginx container or not    
+		pod 2 can have nginx container or not    
 		  
 	A , the identity of 1st nginx is pod 1 as well the identity 0f 2nd nginx is pod 2 
 	    this names are diffrent inside anything can keep .
 		
 	exmpl 2 :- pod 2 name with  nginx
-	           nginx with name  also nginx
+	           nginx with name also nginx
 			   
-** crashloop backoff:-
-**********************
+
+** crashloop backoff:- simply with you command container is not running what kubernetes will do it will
+**********************  restart may be container will run.
    
 . Container is not able to start with out this kubernetes will not there it will re-start.
    
@@ -239,16 +243,20 @@ exmpl:- pod 1 have nginx container is there
 	 
 .env in image defiction vs env in manifest
 *****************************************
-.env in docker should rebuild if you change.
+.env in docker file should rebuild if you change.
 .env in manifest no need to rebuild, just restart is enough.
+
+ .restart--> delete and restart
 	   
 .Resources utilisation :-
 **************************
 .if something goes wrong in loop , it will occupy entire host resources . we need to 
- allocate resources to the containers .
+  allocate resources to the containers .
+
 . 1 cpu = 1000m cpu
 . soft limit ---> 100m cpu 68mi ram
 . hard limit ---- > 120m cpu 128mi ram
+
 *********************************************************************************
 our goal without toching the code, we need to change the values -----> varables
 *******************************************************************************
@@ -261,6 +269,8 @@ our goal without toching the code, we need to change the values -----> varables
 . To check the information like pod :- kubectl get configmap
 . To check inside the config :---> kubectl describe configmap  nginx-config
 		  
+		  .we need to create config-map 1st.
+
 .09-pod-config,yaml:-
 **********************
 		   
@@ -273,22 +283,24 @@ our goal without toching the code, we need to change the values -----> varables
 . create a secret in git bash :- echo "radi" | base 64 like that password
 . to de-code the secret echo secret-id" | base 64 --decode
 		   
- intv :Q :- * How can you access your pod in internet or outside ?
- A , by exposing to services. (service can act like dns to pod and load balancer)
+ intv :Q* How can you access your pod in internet or outside ?
+ A , By exposing to services. (service can act like dns to pod and load balancer)
 	
 	
 	. pod ip are ephemeral (temp)
 					 
-.. services are 3 types:- services are use to communication with other pods.because ip address 
-************************* are ephemeral (tmp) so u need to access other podes with that service.
-		   
+
+services are 3 types:- services are use to communication with other pods.because ip address 
+********************    are ephemeral (tmp) so u need to access other podes with that service. and
+					  . Pod to pod communication using dns and load-balancing. that will expose your pod
+					    using service to access from internet.
 		   
 1.cluster --> default only for internal pod to pod communication..
 		   
 		   
 2.node port -->  it opens  a port on node and expose to internet
-		        when u create a node port service a port is openend on each worker node
-			    any user hits any workernode it will be forward to pod.
+		         when u create a node port service a port is openend on each worker node
+			     any user hits any workernode it will be forward to pod.
 			    
 				(cluster ip  is subset of node port)
 		  
@@ -311,7 +323,7 @@ our goal without toching the code, we need to change the values -----> varables
 .Replical-set:-it makes sure your desire number of pods running all the time
  *************
 . specified number of pod replicas are running at any time. It’s primarily responsible for maintaining a stable set of replica pods,
- replacing any failed pods with new ones to match the desired count
+ it replacing any failed pods with new ones to match the desired count
 		   
 		   
 . it will select through selectors
@@ -324,9 +336,17 @@ our goal without toching the code, we need to change the values -----> varables
 .Deployment-set:-
 ****************
 . deployment will create replica-set .so replica-set is a subset or a part of deployment.
-. when you update the image deployment make sure there is no down time it will create a new replica-set 
-  and it will create the new pod and delete the old-pod			   	  
-			
+. when you update the image 
+. deployment make sure there is no down time it will create a new replica-set 
+  and it will create the new pod and delete the old-pod	.
+
+  . container is the subset of pod ,
+  . pod is the subset of replica-set ,
+  . replica-set is the subset of deployment.
+
+.watch kubectl get pods--> this will show the running pods every 2 mins.			
+
+
 .k8-expense :-
 ************
 . mysql:- 
@@ -347,7 +367,8 @@ and service
 			 
 .we dont have tellnet and local host in  because of minimual image
 .if to want we need to creater bdbug
-			 
+
+.mysql -u root -pExpnseApp@1			 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------		
 mandatory:-
   * eksctl create cluster --config-file=eks.yaml --> to create a cluster
@@ -366,20 +387,28 @@ mysqk-service
 mysql:- create manifest.yaml
 
 create deployment -->create service
+
 	 
 	.come out 	
 4. kubectl get pods -n expense. (if you dont give it will go to default namespace)
      to avoid -n we have to install kubens run this 3 commands.		
+		
 		*sudo git clone https://github.com/ahmetb/kubectx /opt/kubectx
 		*sudo ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx
 		*sudo ln -s /opt/kubectx/kubens /usr/local/bin/kubens
 	
 	    . kubns expense
 		
-		.tellnet --> ref to debug expense-docker. 
+		.tellnet --> ref to debug image in expense-docker.
+		 you can refer the image in k8 by righting a pod-config.
+		 
+		. even you can check other pods.
+		  (. telnet backend 8080 )
+		  (curl http://backend:8080/helth )
 		
-. backend:
----------
+
+.backend:
+*********
 create config-map-->create deployment -->create service	.
 			 
 
@@ -394,7 +423,7 @@ exmp:- external Hd ---> offline near to our computer more speed
 			
 			
 .so hear we have two types 
-1, EBS :- Elastic block store  ---> Static provisioning --> Just like Hard disk
+1, EBS :- Elastic block store  ---> Static provisioning --> Just like Hard disk ---> used in databases
 2, EFS :- Elastic file system  ---> Dynamic provisioning ---> Kubernetes will create volumes.
 			 
 EBS :- 
@@ -418,30 +447,38 @@ vol-03c92999763219936
 				  
 .( we need to attach policys AmazonEBSCSI driverpolicy.) in IAM roles.. you need to give permissions --> instance volume -->iam roles  -->amazonebsdrivers.
 				  
-***. Persistant Volume and Presistant volume claim :- 
- *********************************************** 
-.k8 created a wrapper objects to manage underlying volumes ,because k8 engineer will not have full idea on volumes
+***. Persistant Volume and Presistant volume claim :- pv is the physical representation of external voulme.
+ ***********************************************    .pv --> it represents the physical storage like EBS/EFS.
+													
+													.pv is cluster level and pv creation is adminsteration level 
+													
+													.k8 created a wrapper objects to manage underlying volumes ,
+													  because k8 engineer will not have full idea on volumes
 
- .pv --> it represents the physical storage like EBS/EFS.
+.
 
 ( if run something on pv then it will go and access the volume storage)
-.pv is cluster level and pv is adminsteration level .
-.pvc is namespace level)
+
+
+
+. pvc is namespace level)
 . Now we need to create the Pv  (Persistant Volume)
+
 .ref (https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/master/examples/kubernetes/static-provisioning/manifests/pv.yaml)
 					   
 . block storage will connect to only 1 server not connect multi-servers . 
 					  
  .access mode:-
 *************
-( . ReadWriteOnce
-  the volume can be mounted as read-write by a single node. ReadWriteOnce access mode still can allow multiple pods to access the volume when the pods are running on the same node. For single pod access, please see ReadWriteOncePod.
+( . ReadWriteOnce --> EBS
+  the volume can be mounted as read-write by a single node.
+  ReadWriteOnce access mode still can allow multiple pods to access the volume when the pods are running on the same node. For single pod access, please see ReadWriteOncePod.
 						
-. ReadOnlyMany
+. ReadOnlyMany -->
  the volume can be mounted as read-only by many nodes.
 						
-. ReadWriteMany
-the volume can be mounted as read-write by many nodes.)
+. ReadWriteMany --> EFC
+ the volume can be mounted as read-write by many nodes.)
 						
 policys:
 *******
@@ -449,10 +486,12 @@ policys:
 .Recycle -- basic scrub (rm -rf /thevolume/*)(disk will not delete but the data will be cleaned)
 .Delete -- delete the volume (if you delete the pv the data will be deleted)
 						
+
 .pvc(Persistant Volume clam):- pods should claim pv to access that storage to Clame.(pvc) 
 **************************** . what every storage you are giving to should provide the same.
-								 . after claming if you check kubectl get pv that status has to  be shown bound.
-									 or you can also describe and check (kubectl describe pv file_name)
+								 
+								 .after claming if you check kubectl get pv that status has to  be shown bound.
+								  or you can also describe and check (kubectl describe pv file_name)
 					
 					
 .Node selectors:- it will select your desire location. 
@@ -473,7 +512,7 @@ expense project devops engineer got a requirement to have a volume
 					
 2. you send email to k8 admin to create PV and provide them disk details.
 
-	no it's your turn. pvc and claim in the pod
+	no it's your turn. pvc and claim in the pod.
 					
 					
 2.Dynamic provisioning (efc) :- volume has to create dynamic when every that using storage class.
@@ -482,7 +521,7 @@ expense project devops engineer got a requirement to have a volume
  2. give permissions to ec2 nodes.
 	
 .no need to create pv in dynamic provisioning	
- (we need to inform to admin staf to create the storage class dynamic fro ebs)
+ (we need to inform to admin staf to create the storage class dynamic from ebs)
 			
 . storage class will takecare of volume creation as well as pv creation(Persistant Volume)
 			
@@ -515,21 +554,22 @@ expense project devops engineer got a requirement to have a volume
 4. create pv
 5. create pvc
 6. claim through pod using pvc.
-7. open node port in EKS worker nodes .
+7. open node port in EKS worker nodes .(30007)
 	
 	steps to follow:-
     ------------------	
 	   . in efs create the expense/cluster/vpc  --> and  go network and see 2 avalible zone
 	   . we need to create a network inf efs . 
 	  
-	  . make sure u r not in git repos while installing drivers. (kubectl kustomize \
+	  . make sure u r not in git repos while installing drivers. 
+	  (kubectl kustomize \
     "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-2.1" > public-ecr-driver.yaml
 	   
 	   . kubectl apply -f public-ecr-driver.yaml
 	   
 	   . kubectl get nodes.
 	   
-	   .when u face any issue in kube-config while installing drivers use
+	   .when u face any issue in kube-config or disturb
 	     ( aws-eks --region  us-east-1 update-kubeconfig --name expense )
 		
 		. EFS SG shouid allow traffic on 2049 from the sg attached to eks worker node .
@@ -540,10 +580,11 @@ expense project devops engineer got a requirement to have a volume
 		2.Dynamic provisioning (efs):-
 		***************************
 		1. create storage class
-		2. 
+		 
 		
 .( In projects mostly we will go with dynamic provisioning and we use storage class.)
 		
+
 statefulset vs deployment
 *************************
 1. statefulset is DB related applications.
@@ -574,7 +615,8 @@ statefullset vs deployment
    if any user send a create opperations in 3 bd it will go any where if the user is read it 
    will  go  any of the bd at that time bd  are not replacting each other there update ,  and delete some data this has to update each bd.
 		  
- . so mostly  db's has to replacting with each other and updateing the crud opperations automatiaclly. for a culter the node has to know who are all in the culter to know the ip address and all for that case we need to head-less opperations)
+ . so mostly  db's has to replacting with each other and updateing the crud opperations automatiaclly. 
+   for a culter the node has to know who are all in the culter to know the ip address and all for that case we need to head-less opperations)
 		  
 		  
 (*** command to check the os --->  cat/etc/*release )
@@ -585,8 +627,10 @@ statefullset vs deployment
 A,. Headless service will not have cluster ip ,in the database related applications if any crud operations performed
 	it comes to one node it has to update to all the other nodes.
 
-  .it will do  nslookup all the ip address of other nodes  and them it informs to others 
+  .it will do  nslookup of head-less service all the ip address of other nodes  and them it informs to others 
    for this cases we will use head-less service
+   
+   
 			 
 			 
 . what is head-less service ?
@@ -613,10 +657,10 @@ Topic : 1.HPA(Horizontal pod Autoscalling)
 		
 	.scaling : scalling are of two types
 	----------
-	1. Horizontal :- Horizontal scaling is used  creating multi-servers with zero down time
-					same server--> number of server increase based on traffic
+	1. Horizontal:- Horizontal scaling is used  creating multi-servers with zero down time
+					 same server--> number of server increase based on traffic.
 	
-	2. vertical :- vertical scaling where we can increase the number of resource in the same server
+	2. vertical:- vertical scaling where we can increase the number of resource in the same server
 			       diff server -->  stop the server increase the cpu and ram then restart.
 			
 	. containers can consume all the server resource if something goes wrong we have too menction resource
@@ -640,6 +684,12 @@ intv:Q. how do you scale a pod
 	
 	
 	.k9s tool install it a command line ui  --> curl -sS https://webinstall.dev/k9s | bash (use duplicate tab)
+
+
+.	Hpa auto scalling incress number of pods baswd on traffice
+.	so we can take cpu utlisaction as metric server
+.	before doing hps-auto scaller we shouid install metric server and
+    we shouid menction the resource in the pod we can attach hpa to delploymemt.
 	
 	
 	1.HPA(Horizontal pod Autoscalling):- It is a resource that automatically scales the number of pods in a deployment or replica set based on observed CPU utilization or other 
@@ -656,13 +706,13 @@ intq: how do you auto-scale the pod or what is hpa scalling.
 	
 	.if you want know the applications is working or not we to install apache benchmark 
 	 what apache will do :- load testing.
-	 
-	 
-	 dnf install httpd-tools -y (run with sudo user)(apache-bench)
+	
+		 
+	 . dnf install httpd-tools -y (run with sudo user)(apache-bench)
 	 
 	 .check svc --> kubectl get svc.
 	
-	 . ab -n 5000 -c 100 http://url:80/  
+	  .. ab -n 5000 -c 100 http://url:80/ (load-balancer url) 
 	  (we need to stress load  testing only on frontend) 
 	  
 	  steps followed:
@@ -673,7 +723,7 @@ intq: how do you auto-scale the pod or what is hpa scalling.
 *HELM CHARTS:-
 ----------
 .helm chart is a package manager for kunbernetes applications
-.we can use to templatise manifest files as well as to manage the applications in kunbernetes
+.where we can use to templatise manifest files as well as to manage the applications in kunbernetes
 .To install custome or popular applications in kubernetes like csi-driver , metrics servers ,prometheru grafana .
 	 
 .Helm contains multiple important files chart.yaml,values.yaml,templets 
@@ -710,15 +760,15 @@ intq: how do you auto-scale the pod or what is hpa scalling.
 		aws-ebs-csi-driver/aws-ebs-csi-driver
 
 
-. helm uninstall aws-ebs-csi-drivers -n kube-system
+. helm uninstall aws-ebs-csi-driver -n kube-system
 	
 . if you have done and mistake in helm again you have corrected you have do 
  
  ---> helm upgrade <id.name>
- 
+ --> helm uninstall mysql -n default --> to delete the default namespace
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 intv:Q:- Can you explain about RBAC
-A. RBAC is we have eks cluster intgrated with aws IAM 
+A. RBAC we have eks cluster intgrated with aws IAM 
    IAM provides Authentication and inside eks we have role and role bainding objects
    to provide the autherization.
 
@@ -729,14 +779,15 @@ in our project eks cluster we will create iam user and we provide the describe c
 role -role-banding objects to the namespace level access and we have cluster role and culter role -banding 
 to provide cluster level access.
 
-we use aws authentication config-map in cube system  name space  . to map the iam user to eks.
+. we use aws authentication config-map in cube system  name space  .
+. to map the iam user to eks.
 
 . RBAC:- Role base acess control
 -------
 . Authentication and Autherization
 
-.Authentication is proving you are part of system
-.Autherization is proving you have access to that resource.
+. Authentication is proving you are part of system
+. Autherization is proving you have access to that resource.
 
 
    we have nouns and verbs.
@@ -773,7 +824,7 @@ EKS --> Platform as a service
 
 Authentication
 --------------
-I need to create user in IAM
+I need to create user in IAM --> create an iam role for suresh
 
 Suresh joined our team
 -----------------------
@@ -781,31 +832,47 @@ Expense team will send an email to EKS admin
 
 give him read access to expense namespace
 
-they create IAM user, create a role for suresh to describe eks cluster..
-they create role and rolebinding
-provide access to suresh
+. they create IAM user, create a role for suresh to describe eks cluster..
+  ( go to iam --> policy--> expenseEKSclusterDescribe
+   . create policy to raidi  -->eks -->read-->describe-->resource--> us-east-1-->expense-->arn)
+
+.they create role and rolebinding
+.provide access to suresh
 
 EKS and IAM are two different systems
 
 there is something called aws-auth config map inside kube-system
 
-.. kubectl get configmap aws-auth -n kube-system-o yaml --> this will add the 
+. kubectl get configmap aws-auth -n kube-system
+. kubectl get configmap aws-auth -n kube-system-o yaml --> this will integrate IAM & eks
 
 IAM checks whether user have expense EKS cluster access or not
 
-taints and tolerations
+.kubectl apply -f aws-auth.yaml --> to update the annotations.
+
+. aws sts get-caller-identity --> this will give caller identity  
+
+taints and tolerations 
 affinity and anti affinity
 
 kube-scheduler --> master node component
+
 
 kubectl apply -f manifest.yaml
 
 . kubectl get configmap aws-auth -n kube-system-o yaml --> this will add the 
 
+.If we taint any node kube scheduler will not schedule project
 
-
-
-
+1. make sure IAM user exist and he have cluster describe access
+2. create role and rolebinding
+3. edit aws-auth configmap
+-------------------------------------------------------------------------------------------------------------------------------------------
+.Basicly taint and tolerations are used to rejecting the pods that entering from any other different project node.
+ but in a node if we taint any pod then the node schedule will not allow other pods to schedule 
+ and tolerations will allow the pod  but it will not give guarantee.
+ 
+ 
 .Topics: Taints & Tolerations & Affinity and  Anti-affinity
 ------------------------------------------------------------
 .Taint :-  to repel the pods .we can mark the node as tainted so that scheduler will not schedule the pod on it..
@@ -815,6 +882,8 @@ exmple:- is noting but pantaing (if apply paint to currency note it will not tak
 
 .Tolerations:- on top  of it if you apply the tolerate scheduler can schedule the pods on to tainted nodes,
                 but not guarenty.
+				
+				.kubectl get pod -o wide --> gives detailed list of pods.
 				
  Mostly where we use Taint & Tolerations in projects:-
  -----------------------------------------------------
@@ -832,16 +901,17 @@ exmple:- is noting but pantaing (if apply paint to currency note it will not tak
 .Affinity and  Anti-affinity:-
 ------------------------------
 . Affinity will hard rule that you have to match the labels if any one try to change at the time of execution time .
-           other wise it will not execuit required during scheduling.
+            and other wise it will not execuit required during scheduling.
 
 . Ani-Affinity is soft rule if the given values doesn't met also it will still schedule the pod
                prefered during scheduling
   
 . Pod-affinity:- we will inform backend pod to run where cache is running 
-				. like 2nd pod runs where the 1st pod is running.we can match the labels 
-				  of 1st pod into the 2nd pod so we make sure where the 2nd pod is running 
+				. like 2nd pod runs where the 1st pod is running.we can match the 
+				  labels of 1st pod into the 2nd pod so we make sure where the 2nd pod is running 
 				  where the 1st pod runs
-.pod-anti-affinity:- anti-affinity is oppositew here pod-2 will not run where 1st pod is running.
+
+.pod-anti-affinity:- anti-affinity is opposite where pod-2 will not run where 1st pod is running.
  
  
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -858,7 +928,11 @@ Classic LB --> By default it creates classic load balancer
 								 .it routes traffic to multiple tg based on host or context rules
 								 .it works on layer-7
 	
-	
+	Examples:- . if you open facebook in mobile it shows --> m.facebook which is optimized for smaller screens and touch interactions.
+	           . in laptop facebook. larger screens with mouse and keyboard interactions.
+			   
+			   . This differentiation is often achieved using Application Load Balancers (ALB) in a cloud environment,
+  			     leveraging Target Groups and Listener Rules.
 intq:
 ----
 
@@ -867,13 +941,14 @@ intq:
 3. why shouid infr-stecture as code.
    
   why we need ingress-controler:-
-A,. If you want to give internet access to you applications in kubernetes 
-  . so we are using kubernetes cluster we have alb as ingress-controler
+A,. If you want to give internet access to you applications in kubernetes  we have to provsion ingress-controler.
+  . as a part we are using kubernetes cluster we have alb as ingress-controler
+  . As part of setup we have oidc-provider, and we created the policys
   .	we have installed aws load-balancer controller drivers through helm  charts and
     given appropriate permissions.
-  . we have create ingress resource and objects for the apps that required external access
+  . we have create ingress resource and objects for the apps that required external access.
 
-. WHY WE NEED THIS DRIVERS:-. ALB IS THE EXTERMAL COMPONENT TO CONNECT  EKS AND ALB WE NEED DRIVERS.
+. WHY WE NEED THIS DRIVERS:-. ALB IS THE EXTERMAL COMPONENT TO CONNECT  EKS AND ALB WE NEED TO PROVIDE DRIVERS.
  
  .we are create two applications 
   app-1,app-2
@@ -896,7 +971,10 @@ Steps:-
 . create the certificate acm--> aws--> acm certificate--> create-->request-->*.aws-dev-rk.online
 . kubectl get ingress
 . create the r53 -->app1
-. follow 
+. follow same for app-2 
+
+
+why arn is required:- we have have to run on https right so we need to provide the certificate
 
 
 Topic:
@@ -970,14 +1048,21 @@ name=aws-load-balancer-controller
 							  .Annotations are used to select special resource like ingress-controler etc..
 
 
+Liveness Probe: . If the app is not working (e.g., becomes unresponsive, crashes, or gets stuck),
+--------------		Kubernetes will automatically restart the container to restore functionality.
+				.This provides self-healing capabilities for your application.
+				.We use the liveness probe for periodic health checks to confirm the app is still functioning.
+
+Readiness Probe:- .Ensures the container is ready to accept traffic.
+---------------	  .The container may take time to initialize (e.g., loading configurations, establishing database connections), 
+				    and the readiness probe ensures it is only marked ready once it can handle requests.
+				  .First, the container must pass the readiness check before it is added to the service's endpoints.
 
 
-.liveness and readiness probe:- if the app is not  working k8 can auto re-start your applications and  it do self healling.
------------------------------- . we will use  liveness probe --> for health check
-							   . readiness probe --> Ready to accept the traffic (1st the container has to ready to accept the traffic)
 
 intv:q
-.Init-containers:- we can run init containers before main containers run. it can be  or many.
+
+.Init-containers:- we can run init containers before main containers runs in pod
 ---------------- . Init containers shouid be ready before main container runs	
 				 . If init container fails , main container will not run.
 				 . init containers goes to completion state.
@@ -986,8 +1071,17 @@ intv:q
 				   
 exmple:- for i in {1..100}; do sleep 1; if nslookup mysql; then exit 0; fi; done; exit 1	
          (it wate for 100 sec and check mysql is working or not if not it will exit.)			   
+
+
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
+interview q:-(Cluster creation: we use terraform to create cluster and upgrade )
+-------------
+
+
+
 Admin activity.
+--------------
 
 Topic:- .we use terraform to create cluster and upgrade(same in interview)
 ------- .we will create cluster
@@ -1003,24 +1097,38 @@ Topic:- .we use terraform to create cluster and upgrade(same in interview)
 					  blue-green deployment have zero down time approch 
 					  We will create same set of node along once everything is shifted to green we will delete the blue.
 
-Cluster Upgrade:- .it is better to announce downtime, you do not do any release or deployment or changes 
----------------     to any resource.
+Cluster Upgrade:- . we are using terraform based eks cluster we have blue node group and green node groups
+---------------   . Blue is the current running version   we will create same set of greend node and 
+				  
+				  .it is better to announce downtime, you do not do any release or deployment or changes 
+					to any resource.
+				  
 				  . change the sg so that only admin team will have bastion access to cluster.  
 				   
 				   Steps:- 
 				   -------
 				   1, create another node group with same capacity
-				   2, cordon (just like taint) green node not to accept any pods (kubectl cordon <node-name)
-				   3, upgrade control plane version to 1.31 (send a communication to that EKS is getting upgradeing, no new deployment and releses happen)
-																(change the sg to remove access to other teams)
+				   2, cordon (just like taint) green node not to accept any pods 
+				      (kubectl cordon <node-name>)
+				   3, upgrade control plane version to 1.31 
+				   
+				   (send a communication to that EKS is getting upgradeing, no new deployment and releses happen)
+															
+					(change the sg to remove access to other teams)
+				   
 				   4, upgarde green also to 1.31
-				   5, we will cordon blue node , uncordon green nodes (kubectl cordon ip-address)
-				   6, drain all blue nodes,(means all nodes will move to green) (kubectl drain ip-address)
+				   
+				   5, we will cordon blue node , uncordon green nodes 
+				    (kubectl cordon ip-address)
+				   
+				   6, drain all blue nodes,(means all nodes will move to green) 
+				    (kubectl drain ip-address)
+				  
 				   7, delete blue node group.
 				   
 				   .(if version change to 1.32v then green will move to blue and green will be deleted)
 			
-..VM to containers migration (k8):-
+.VM to containers migration (k8):-
 --------------------------------
 .in migration project you want to migrate the VM to Containers
  there we have existing- ALB at time time u dont need to create the new ALB  through ingress
@@ -1031,7 +1139,9 @@ Cluster Upgrade:- .it is better to announce downtime, you do not do any release 
  . ALB --> Listeners --> Rule --> Target group (Health checks)(Instance-based) --> VM
  . ALB --> Listeners --> Rule --> Target group (Health checks) K8--> PODS. 
  
- .Create ACM, Create ALB,Listeners,Rule,Target Group (ip-based)
+ 
+.Create ACM, Create ALB,Listeners,Rule,Target Group (ip-based)
+
 1. ingress resource --> Target group
 2. Traget group binding--> adds our pods to target groups.
 
@@ -1056,9 +1166,7 @@ name=aws-load-balancer-controller
 .helm list -n kube-system(check the details are listed)
 .kubectl get pods -n kube-system
 
-
-
-
+-----------------------------------------------------------------------------------------------------
 
 .Topics:-
 ----------
@@ -1069,7 +1177,7 @@ name=aws-load-balancer-controller
 
 
 1, How to push images to ECR:- . In project we dont use docker images we will use ECR images.
------------------------------
+-----------------------------  . create a image in ecr and push the image form ecr
 
 2. DaemonSet:- .If you run daemon-set make sure of a pod runs on each and every worker
 ------------   .It is usefull when you want to Moniter the node and if you want any metrics
@@ -1078,9 +1186,11 @@ name=aws-load-balancer-controller
 3.Service Account:- .It is not human user it is created system 
 -----------------   exmpl: if trainee in compny he can create pods, but he can get the secret or the list the secrets.
 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 4. K8-architecture:- Kubernetes run on  Master & Node Architecture 1 master will be the it will communication 
 -------------------  with multiple Nodes.
+
 
 In-master:-
 **********
