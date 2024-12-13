@@ -1,0 +1,200 @@
+Coco cola drink:- . we will take one drink into lab seperately , change the formula. then we taste it as employess
+----------------    if we dont like we change the formula untill we like it..
+                  . 	(Dev -env)
+				  .we will hire few tasters we will give them drink they provide some feedback.
+				   based on their feedback we will chnage again . finally they liked it.
+						(QA -env)
+				  .we will do survey in multiple countries we go to public. we randomly select 10k members 
+				   collect feedback. if they like it we can release
+					(UAT -env)
+				  .Take fassai permission about new composition.
+					   (pre-prod -env)
+				  . Now we can release into market.
+				       (PROD)
+
+Git
+---------
+create repo
+git clone
+git add --> staging area
+git commit -m  "" --> commit to local repo
+git push --> push to central repo
+Git is a distributed version control system...
+
+Linus Torvalds --> 2005
+
+git init --> convert a folde into git repo. .git folder will be created
+git remote add origin <url>
+git branch -M main
+
+Branching:- . Main branch point to production
+----------  . we need to create another copy of the file , do the changes carefully review the chnages.
+				if okay then edit into the main file.
+			. create another branch from main branch
+			. do the changes required
+			. test the changes
+			. scan the changes
+			. if everything is fine bring those changes into MAIN branch.
+			
+Sha-code:- Sha-code is 40 char code
+--------   . if the commit id is changed we can say code is chnaged			
+		   . if the code is changed , commit id also chnages.
+
+************************* BIRAYANI PROJECT ****************************************************		   
+Git birayani:- we need to create that no body is allowed to do changes in main-branch.
+------------
+Pull-Request (PR process) :-. Some one have to review before you merge chnages into main branch.
+-------------------------    (means no body is allowed to push force  & delete) 
+
+							. create another branch from main branch do changes 
+							. create PR 
+							. get the approval then merge changes.
+							
+							.(while creating poject --> under we have to give active--> then collaboration with team members with there git hub account--> and give  write access to pr)
+							
+merge-commit:-  . Merge commit will have 2 parent commits.
+-------------	. Merging preserves history, at any point you can track all the history of changes.
+				. Merge commit is an extra commit created by Git
+				
+where to use merge:-  If a branch is developed by mutiple persons we prefer merge			
+------------------
+
+How to resolve merge conflicts?
+
+.Confilict come when git find diff code in the same line
+.Then git will  give conflict .
+.Now developers shouid discuss and resolve conflicts.
+.git shows conflicts using less than and greater that symbols.
+.we have to dissuss and decide what code we can keep then remove the special char and processed to commit
+
+
+rebasecommit:	. Rebase will not create extra commits.
+------------	. There is no history preserved in rebase since only one parent
+				. commit id will be changed in rebase
+
+where to use Rebase:- If a branch is developed by single persons we prefer Rebase
+-------------------   .make sure how rebase works
+
+steps:
+-----
+.Do git log (3f180a9a525ec522257560fe947d1a8825007741) --> this will generate the id of main branch.
+.git checkout -b plain-rice --> This will create the new branch .(plain-rice)
+.added ingredints and push .
+.git checkout main --> this will chekout the project.
+.do git pull --> the changes where commit in the project and pul from central repositry. 
+.git cat <commit-id> --> this will give the track of the chain.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Branching strategy:-
+====================
+How you develop and how to release the application into production
+
+git flow
+==========
+1. main
+2. development
+
+these two are longlived branches for lifetime.
+
+shortlived branches
+=========
+feature
+release
+hotfix
+
+develop branch source is: main
+
+sprint-1 --> 4 weeks
+-------------------
+single feature or multiple features or few defects
+
+feature-video-call --> all developers use this branch to do code changes
+feature-whatsapp-status
+
+source: develop
+destination: develop
+
+changes are merged to develop branch using PR. changes are tested in develop environment
+
+if there are defects, create another feature branch. do the changes. again merge to develop branch. again test
+
+now develop env is done...
+
+release branch
+-------------------
+release/v1.2.3
+
+source: develop
+target: main and develop
+
+test the application in QA, UAT, etc. if there are defects. do the changes in release branch and test them in QA, UAT, etc.
+
+everything is good in all environments. then merge the changes to master/main branch. release the application into production. merge the changes into develop branch.
+
+hotfix branch
+------------------
+P0, P1, P2, P3, P4
+
+SLA --> service level agreement
+P0 --> severe, business is completely down. 30min
+P1 --> severe, may be 2hours
+P2 --> 
+P3 -->
+P4 -->
+source: main
+destination: main and develop
+
+whatsapp supports multiple versions at a time, android too..
+
+for web applications git model is very heavy, we can move to github flow or feature branching model...
+------------------
+
+github flow or feature branching model:-
+--------------------------------------
+. we are following feature branching model , we have main branch as long livend branch
+  and  feature branch as short lived branch.
+. we will create feature from main branch with all the necessary changes and
+  we are following shift-left process
+. for every commit we are doing in feature branch we will build it ,scan it,test it, and
+  deploy it in to development environment and do the functionality testing.
+. once every thing is fine we will raise a PR to  main branch.
+. from main branch again we will go to QA,UTA at any non-prod environment
+. once every thing is good in non-prod then we will raise the CR.
+. CR will have Date,Time,test-reports,Scan, and Role back once we get the approval
+  we will move it to production
+. after prod our support team will checks the basic sanati-checks if that is failed we will
+  again roleback to development.
+  
+  
+Git rest vs git revert:-
+-----------------------
+.These commands are fot the purpose of undo the chnages.
+
+workspace :- where we write the code
+staging area:- changes are added to staging area from workspace
+commit area:- changes are commited to git from staging
+
+git rest:-  . useful to undo the changes done already .
+---------	. Rest will rewrite  the history , it chnages commit ids
+			. reset works only in local branch not remote branches other will get lot of error.
+		
+			. we have 3 options
+				1, soft --> git reset soft HEAD~1 ( the changes are at staging area)   (check git status) this will indicate in Blue.
+				2, mixed --> git reset HEAD~1 (GIT will remove the changes at staging area it will commit to workspace) This will indicate in Red.
+				3, hard --> get rest --hard HEAD~1 ( changes  will be removed commit, staging,and workspace)
+ 
+git revert:- . revert will not remove commit , but it can do the changes to correct
+-----------    the wrong commits, history will not changed.  extra commits are added to correct wrong commits.
+ 
+ 
+Key Differences
+Aspect						git reset		 				git revert
+History Impact				Rewrites history(destructive)	Preserves history (non-destructive)
+New Commit?					No								Yes
+Use Case					Adjust local commits	        Undo changes in a shared branch
+Working on Shared Branch?	Risky (may cause conflicts)	    Safe
+
+When to Use Which?
+Use git reset if you are working locally and haven’t shared the changes yet.
+Use git revert when you need to undo changes in a branch that others are using 
+(e.g., after pushing to a remote).
