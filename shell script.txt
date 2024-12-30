@@ -1,0 +1,272 @@
+shell scripting:- Shell is an interpreter that executes the commands.
+================
+Manual disadvantages
+--------------------
+. Human error
+. time taking
+
+GitOps:-> git is the single source of truth of decentarlised 
+
+what is git :-
+-----------
+. Git follow distribuated or decentarlised architecher. same kind of setup exits in remote
+   server is available in all the computers connected to that repo.
+. so at any point of time single computer is enough to restore everyting.
+. this is called distribuated or decentarlised . this is acheived localrepo setup
+
+
+. what is shiban:-
+-----------------
+. It the first line in shell scripts that interpreter the command and executes Them .
+
+
+. main topics:-
+----------------
+. variables 
+. data types
+. conditions
+. loops
+. functions
+
+. Special variables :-
+---------------------
+. i want all the variables passed to the scripts 
+ A, ($@) $ is a variables ,@ will give all the variables
+
+. How many variables/args passed to the script
+A, ($ #)  #number of variables passed
+
+. process id of the current script.
+A, we can use $$ PID of the script executing
+
+. what is last background command 
+A, $! this will give the last background command you runed
+
+. In shell script how you will check the privous command is success or not
+A,by using ($?) it will tell you the status of privious command
+   if 0 it is success
+   if 1 to 127 is failure.
+
+	
+. Conditions:-
+-------------
+if and else
+
+if (expression)
+{
+	executes these statment if above expression is true
+}
+
+if (expression)
+
+{
+	executes these statment if above expression is true
+}
+
+else
+{
+	xecutes these statment if above expression is true/false
+}
+
+exmpl:-
+------
+today = what is today
+
+if ( today == "Monday" or "Tuesday" or "Wednesday" or "Thursday" or "Friday" 
+
+{
+	print "attent "
+}
+else
+{
+	print "no-session"
+}
+
+2nd conditions:
+------------
+if (today != "sat" or "sun")
+{
+	print "attend session"
+}
+else 
+{
+	print "no-session"
+	
+}
+
+.Install mysql using shell script:-
+----------------------------------
+1. check the user has root access or not
+2. if root access proceed with the script
+3. otherwise through the error
+4. check all rdy install or not , if  not installed tell the user it is all ready installed
+5. if not installed install it
+6. check it is success or not
+
+===============================================================================================================
+#!/bin/bash
+
+USERID =$(id -u)
+
+CHECK_ROOT (){
+        if [$USERID -ne 0]
+        then
+        echo "Run the user with root priveleges"
+        exit 1
+fi
+}
+
+VALIDATE () {
+        if [$1 -ne 0]
+        then
+                echo "$2 is failed"
+                exit 1
+        else
+                echo "$2 is success"
+        fi
+}
+
+CHECK_ROOT
+
+dnf list installed git
+if [ $? -ne 0 ]
+then
+        echo "git is not instlled  going to install it.."
+        dnf install git -y
+        VALIDATE $? "installing git" 
+else
+        echo "git is already installed"
+fi
+
+dnf list install mysql #mysql installation
+if [ $? -ne 0 ]
+then
+        echo "mysql is not installed at...going to install"
+        dnf install mysql -y
+        VALIDATE $? "installing mysql" 
+
+else
+        echo "mysql is already installed ...."
+fi
+====================================================================================================================================================================
+loops:- while u r installing at time no.of packages u can loop then to install
+------
+
+Redirections:- This will redirect to success output
+------------- 
+exmpl:- ls -l > output.txt --> by default it redirect only success output
+------  1--> success
+		2--> error
+		
+		ls -1 2> output.txt --> redirect only error output
+		
+
+.in the projects you can show what work you have done in last week or last mont 
+
+. Run --> sudo sh 18-redirectors.sh git mysql nginx postfix
+--> cd /var/log/shell-script/
+---> ls -last (this will show that the logs of redirectors
+-----> ls -l <log -id> 
+------->ls -lt (all the logs file caheck the latest )
+----------> ls -l 18-redirectors-2024-09-27 -*(-* this will give the current month logs)
+
+. | tee -a ---> this will executes the outputof logs on the terminal
+
+
+**
+.Idempotency:- . if you run a program infinite times it shouid not change the result.
+-------------- . in crud operations if you are creating it will a probelm.
+
+
+.HTTP Methods and HTTP status codes:-
+------------------------------------
+we crud
+
+get post put delete options
+
+get --> read. the data form db
+post --> create. you shouid send the data. usually it goes as json
+put --> update, update the existing infrom
+delete--> delete
+
+the  status code 2** 200,201,202,204--> success
+4** --> 400 client side error (backend is the client --> frontend. 404--> not found 
+400 -->
+401--> unauthorized
+402--> payment required
+403--> forbidden
+404--> file not found
+405--> method not allowed
+
+500--> internal server error
+501--> not implemented
+502--> bad gateway
+503--> service unavalibel
+504--> gateway timeout
+
+Deleting old logs using shell script:-
+-------------------------------------
+.write a script that shouid delete .log files which are older than 14days
+ (find . -name "*.log"+mtime +14)
+ 
+delete the logs
+--------------
+1. which directory
+2. is that directory exist ?
+3. find the files
+4. delete them
+
+
+.With in linux prefer to write shell script , because shell is native there 
+.python --> getting data from external systems.
+
+.Crontab:- .It can be automate the manual deleting of logs that can be schedule the script per
+--------    mid night script, weekend script, hourly script.
+
+			. 5 	4	 * 		* 		*
+			  M  	H 	day		Month	day (week)
+			  
+			 .pwd---> /home/ec2-user/git-practice
+			 .crontab -e (edit)
+			 .*/2 * * * sh /home/ec2-user/git-practice/
+
+.Backup:- .Dyanamically user give source directory destination directory number of days
+-------     ..optional if they dont provided default is 14days.
+		  .get the source dir, destination dir,day from user
+		  .if they are not providing show them usage and exit
+		  .if they provide chekc those dir exit if not exist exit the script.
+		  .if exit find the files more than 14days zip them and move t destination directory
+		   delete in source directory.
+		   
+***
+1.Read the file and count the number of each word/ 
+  .Print the top 5 occurences
+  
+2. reverse rows into column and columns as row
+
+..Legacy-systems:- 
+------------------
+Achivement in project:- .As part of our team we are managaing  our legacy systems as well.
+----------------------  .as Frequnlty we are unable to manage the logs using promithus grafana 
+						  we are not getting the access from the other team to access those servers.
+						. So using shell script i have monitoring cpu and memory and sending the alert emails
+						and backup script and scheduled them using crontab.
+
+
+
+.Configuration management:-1. server to plan server with out anything installed
+-------------------------- 2. install app runtime and few packages
+						   3. creating user and folders
+						   4.downloding code
+						   5. installing dependencies
+						   6. creating systemctl services
+						   7. copying config files
+
+plain--> ready to server the application/end user -->manual--> shell script
+
+DIS-ADV:
+1. not  idempotent --> write cutome code to make it idempotent
+2. error handling --> we need t write code to check the error
+3. Homogenous--> only works specific distro
+4. Not scalable whene to many 
+5. Syntax is not easy to understand.
