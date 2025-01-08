@@ -1,15 +1,23 @@
+ami-09c813fb71547fc4f
+
 CICD:- Continous Integration 
 -----
 .For continous integration we will use Jenkins
 
-in old process manually deployment:-
--------------
+in olden days we use to follow the traditional manually deployment process:-
+--------------------------------------------------------------------------
 .take one server -->git clone <url> --> npm install --> downloads dependencies -->npm test --> unit test cases
                                sonar--> scan ,zip--> zip the application
-.store the application into  some other artifact server.
+.it store the application into some other artifact server. this will be the manually process every time it will take lot of time,
+  Error like Human errors can occur,
+  Inconsistent: Different environments or team members might execute steps differently
+  Lack of Automation: Repeated efforts are required for every new build or deployment.
+
+.so in continous integration we take one server and manage all the dependencies that is jenkins server.
+
 
 *****.What is continous integration ?****
- .it is the way of integration the code from source and create artifact .in between source
+ .it is the way of integration the code from source and create artifact(file or docs) .in between source
   and creating artifact we need to install dependencies, run unit test cases scans etc .
   insted of this manually we can automate through Continus Integration process .. 
   we are using Jenkins for Continous Integration.
@@ -46,30 +54,42 @@ sudo systemctl enable jenkins
 
 
 .jenkins will run on port 8080.
+
 .in Jenkins every thing is called as JOB. when you trigger it is called as build.
-. we have 3 stages in build
+.we have 3 stages in build
   
   .pre-build, build ,post-build.
   
+.Free-style job:- manually created infra vs iaac
+---------------  . you cant restore if something goes wrong
+				 . we can track we did the changes
+				 . cant reuse
+				 . no review of chnages
+				 . no version control.
+				 . if you make it as pipeline and keep it in git you can reuse ,u can review, you can raise the pr.
+  
+
 .Pipeline:- is noting but Mutiple-stages creating like the output be comming input .
 ----------
 Jenkinsfile (Declarative Pipeline)
+
 pipeline {
     agent any 
     stages {
         stage('Build') { 
             steps {
-                // 
+                sh "echo this is build"
             }
         }
         stage('Test') { 
             steps {
-                // 
+                sh "echo this is test"
             }
         }
         stage('Deploy') { 
             steps {
-                // 
+                sh "echo this is Deploy"
+                error 'pipeline success'
             }
         }
     }
@@ -80,7 +100,7 @@ this will show the stage view .
 
 .All the pipeline has to come from git and we need refer in jenkins
 
-.Master Agent Architecture:- In continous integration like jenkins environment master can't satisfy 
+.Master Agent Architecture:- In continous integration like jenkins environment master it can't satisfy 
 ---------------------------  all the requirments and all the work loads so can have diffrent types of agents with 
 							 with diffrent agents we can connect master vya SSH, you can provide agent ip-address
 							 and passwords you can provide some labels ,while trigger the pipeline we can menction
@@ -100,9 +120,112 @@ this will show the stage view .
 .Triggers:-
 ----------
 .When ever developer push to git, it should automatically trigger pipeline
- we will call this as webhooks.
+ 
+.we will call this as webhooks.
 
 .when ever developers  has push to git branches we will immeditly trigger jenkins pipeline through webhook.
 
 git hub -->go to repo-->webhook-->add-webhook-->payload url --> add jenkins url/github-webhook/
 and disable SSL
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+Expense application integration in jenkins:-
+--------------------------------------------
+.take 50 gb and re-size the disk 
+
+. install  plugins
+1, stage view
+2, steps utlities
+3, aws credintails
+4, aws steps
+
+.what is upstrem and down stream in jenkins:-
+--------------------------------------------
+. when they are dependencies between multiple jobs in jenkins we can trigger pip line
+  when one pip line is success.
+  
+ 
+  
+  as simple the pipeline will trigger after 1 job is success.
+  
+ .. we are using upstrem & down stream jobs for our vpc & SG 
+  
+.what are the jenkins agent you are using ?
+ -----------------------------------------
+ .
+  
+  
+Parallel In Sequential:-
+----------------------- 
+ 
+.we have parllel or Sequential that can destory and trigger the resources
+ . vpc
+ . sg
+     . bastion
+	 .eks
+	 .acm
+	 .ecr
+	 .cdn
+ . alb
+ 
+ .in the stage if there is no dependencies we can go with parllel stage 
+ . this way you cann trigger or destory the resources.
+ 
+ 
+.vpc -->  it should create the vpc , and trigger the sg' (this is scencuatule)
+-----
+.SG --> it apply and it should create sg and trigger (these are parllel)
+------   . bastion  
+		 . rds
+		 . eks
+		 . acm
+		 . ecr
+		 . cdn
+		 
+		 . if every thing is created and applied
+. alb
+
+*******in projects we dont destory the infra**********************************
+
+Destory:
+-------
+ECR when it destory it can trigger all  and destory
+ .alb
+ .cdn
+ .ecr
+ .acm
+ .eks
+ .rds
+ .bastion
+
+sequence
+	 .sg
+	 .vpc
+
+
+STEPS:- CICD
+------
+.sg is down steam for sg
+
+.vpc is upstrem for sg
+
+We need to set up the eks
+-----------------------------
+.we need to set the aws-loadbalancer-controller
+.and we need to have ingress resources (use if listerns and rules are not created) &
+.use the target group binding ((use if listerns and rules are created)
+
+APP CICD
+=========
+. after this one time setup we can create
+   . Build
+   . unit test
+   . scan
+   . build the image
+   . push the image
+   . heml to deploy
+   
+   
+ 
