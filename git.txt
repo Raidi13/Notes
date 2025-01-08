@@ -220,3 +220,10 @@ git restore --staging <file-name> --> it will bring the changes from staging are
 git restore --source <file-name> --> can completely restore the file to that particular commit-id. but it will not remove the commit-id
 
 restore works on particular file, reset or revert works on entire workspace..
+
+
+Git intervier view qustions:-
+----------------------------
+1, Merge vs rebase
+2, Branching strategy
+3, reset & revert difference

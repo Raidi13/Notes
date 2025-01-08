@@ -54,8 +54,7 @@ assignment:-
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 										.Kubernetes. 
 										 **********
- 
- 
+  
  
  1. Building the images --> by bulding the image we get dockerfile.
  2. running the images --> if we run the images we will get containers. (docker compose)
@@ -72,7 +71,7 @@ assignment:-
  
 . Commands :-
 *************
-* kubectl ---> k8 client command ( just like mysql command line)
+* kubectl ---> k8 client command-line tool used to interact with Kubernetes clusters( just like mysql command line)
 * eksctl --->  it will manage the cluster like create ,update, delete the cluster 
  
   . we will use this both the command to
@@ -230,13 +229,13 @@ exmpl:- pod 1 have nginx container is there
 . To see the container full details :- kubectl describe pod <pod.name>
 	 
 
-. 04-labels.yaml:- labels are used for kubernetes for filtering the resource 
+.04-labels.yaml:- labels are used for kubernetes for filtering the resource 
  ***************	internal resources selectors
 
 ** kubectl describe pod labels -----> full-information **
 	 
-. 05-Annotations :- are used for  kubernetes external resources selectors
-  **************
+.05-Annotations :- are used for  kubernetes external resources selectors
+**************
 	   
 .06-env :
 *********
@@ -251,12 +250,15 @@ exmpl:- pod 1 have nginx container is there
 .Resources utilisation :-
 **************************
 .if something goes wrong in loop , it will occupy entire host resources . we need to 
-  allocate resources to the containers .
+  allocate resources to the containers . it is use in monotring
 
 . 1 cpu = 1000m cpu
 . soft limit ---> 100m cpu 68mi ram
 . hard limit ---- > 120m cpu 128mi ram
 
+ ** How do you restric the container.
+ A, so we can use the resource limts to restric the container.
+ 
 *********************************************************************************
 our goal without toching the code, we need to change the values -----> varables
 *******************************************************************************
@@ -287,7 +289,7 @@ our goal without toching the code, we need to change the values -----> varables
  A , By exposing to services. (service can act like dns to pod and load balancer)
 	
 	
-	. pod ip are ephemeral (temp)
+	. pod ip are ephemeral (temp) so it is not to good pod -pod with ip address
 					 
 
 services are 3 types:- services are use to communication with other pods.because ip address 
@@ -304,7 +306,8 @@ services are 3 types:- services are use to communication with other pods.because
 			    
 				(cluster ip  is subset of node port)
 		  
-3.load balancer --> 
+3.load balancer --> Provides an external IP address to expose the service directly 
+				    to the internet using a cloud provider's load balancer.
 
 (cluster ip is subset of nodeport , nodeport is subset of load balancer)
 		   
@@ -418,14 +421,17 @@ create config-map-->create deployment -->create service	.
 **********************   The location of the directory, the storage media that supports it, and its contents, depend on the specific type of volume being used.
 						 (Storage volumes always has to be outside the cluster that will be safe )
 			 
-exmp:- external Hd ---> offline near to our computer more speed
-----   google drive ----> online somewhere in network less speed
+exmp:- external Hd ---> offline near to our computer more speed (EBS)
+----   google drive ----> online somewhere in network less speed (EFS)
 			
 			
 .so hear we have two types 
 1, EBS :- Elastic block store  ---> Static provisioning --> Just like Hard disk ---> used in databases
 2, EFS :- Elastic file system  ---> Dynamic provisioning ---> Kubernetes will create volumes.
 			 
+			  . what is provisioning in aws 
+			   (Provisioning in AWS Cloud, in simple terms, is like preparing and setting up 
+			      the resources you need to run your applications or services.)
 EBS :- 
 -----
 1, WE NEED TO CREATE THE VOLUMES .
@@ -448,11 +454,11 @@ vol-03c92999763219936
 .( we need to attach policys AmazonEBSCSI driverpolicy.) in IAM roles.. you need to give permissions --> instance volume -->iam roles  -->amazonebsdrivers.
 				  
 ***. Persistant Volume and Presistant volume claim :- pv is the physical representation of external voulme.
- ***********************************************    .pv --> it represents the physical storage like EBS/EFS.
+   ***********************************************   .pv --> it represents the physical storage like EBS/EFS.
 													
-													.pv is cluster level and pv creation is adminsteration level 
+													 .pv is cluster level and pv creation is adminsteration level 
 													
-													.k8 created a wrapper objects to manage underlying volumes ,
+													 .k8 created a wrapper objects to manage underlying volumes ,
 													  because k8 engineer will not have full idea on volumes
 
 .
@@ -472,7 +478,8 @@ vol-03c92999763219936
 *************
 ( . ReadWriteOnce --> EBS
   the volume can be mounted as read-write by a single node.
-  ReadWriteOnce access mode still can allow multiple pods to access the volume when the pods are running on the same node. For single pod access, please see ReadWriteOncePod.
+  ReadWriteOnce access mode still can allow multiple pods to access the volume when the pods are running on the same node. 
+  For single pod access, please see ReadWriteOncePod.
 						
 . ReadOnlyMany -->
  the volume can be mounted as read-only by many nodes.
@@ -588,7 +595,8 @@ expense project devops engineer got a requirement to have a volume
 statefulset vs deployment
 *************************
 1. statefulset is DB related applications.
-(TO keep the data base in kubernetes that may be mongo bd, mysql, prometheru grafana,etc that is possible through State full set)
+(TO keep the data base in kubernetes that may be mongo bd, mysql, prometheru grafana,etc 
+  that is possible through State full set)
 
 2. depolyment is for stateless applications.
 
@@ -603,8 +611,9 @@ statefullset vs deployment
 
 4. deployment will not have headless service.
 				
-5. statefull-set pod will be created in orderly manner.
-6. statefull-set will keep its pod identity.pod names will created as -0,-1,-2,-3 etc ..
+5. stateful-set pod will be created in orderly manner.
+6. stateful-set will keep its pod identity.
+	.pod names will created as -0,-1,-2,-3 etc ..
 
 7. in deployment the pod ide will change		
 		
@@ -620,15 +629,15 @@ statefullset vs deployment
 		  
 		  
 (*** command to check the os --->  cat/etc/*release )
-( command for dns records ---> nslookup (server-name) )
+( command for dns records ---> nslookup (server-name) ) 
 		  
 		  
 . head-less service ?
-A,. Headless service will not have cluster ip ,in the database related applications if any crud operations performed
+A,. Headless service will not have any cluster ip attach to it ,in the database related applications if any crud operations performed
 	it comes to one node it has to update to all the other nodes.
 
-  .it will do  nslookup of head-less service all the ip address of other nodes  and them it informs to others 
-   for this cases we will use head-less service
+  .it will do  nslookup of head-less service so that it can do all the ip address of other nodes  and them it informs to others 
+   for this cases we will use head-less service.
    
    
 			 
@@ -826,7 +835,7 @@ Authentication
 --------------
 I need to create user in IAM --> create an iam role for suresh
 
-Suresh joined our team
+Raidi joined our team
 -----------------------
 Expense team will send an email to EKS admin
 
@@ -992,7 +1001,16 @@ Topic:
 						  
 	. Eks node & eks cluster will be in private-subnet,load balancer will be in public load-balancer
 	  send the traffic through node port & ingress
-	
+	  
+. Classic load-balancer: .by default  it create classic lb.
+-----------------------  . it is  not intelligent
+						 . it cant route the traffic to diffrent target groups.
+						 . it not recommend by aws
+
+. Application load-balancer:- . it is intelligent
+---------------------------   . it routes traffic to multiple target group based on host or context rules
+							  . it works on layer-7
+
 -------------------------------------------------------------------------------------------------------------------------------------------
 Topic:- Admin Activity
 ------
@@ -1010,10 +1028,11 @@ Ingress-controller:- ingress-controler is used to provide external access to the
 					. we have a resource a called ingress to create ALB, Listeners,rules and traget groups
 .INSTALL & POLICYS:-
 -------------------
-					
+	(ingress is outside of eks  to give access we are installing oidc-provider)		
+
 . eksctl utils associate-iam-oidc-provider \
-    --region <us-east-1> \
-    --cluster <expense> \
+    --region us-east-1 \
+    --cluster expense \
     --approve	
 
 . curl -o iam-policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.10.0/docs/install/iam_policy_us-gov.json
@@ -1066,7 +1085,7 @@ intv:q
 ---------------- . Init containers shouid be ready before main container runs	
 				 . If init container fails , main container will not run.
 				 . init containers goes to completion state.
-				 . to set conffiguration and check external dependency apps status we can make
+				 . to set configuration and check external dependency apps status we can make
 				   use of init containers.
 				   
 exmple:- for i in {1..100}; do sleep 1; if nslookup mysql; then exit 0; fi; done; exit 1	
@@ -1097,6 +1116,16 @@ Topic:- .we use terraform to create cluster and upgrade(same in interview)
 					  blue-green deployment have zero down time approch 
 					  We will create same set of node along once everything is shifted to green we will delete the blue.
 
+check the nodes:- aws-eks update-kubeconfig --region us-east-1 --name expense-dev
+------           .if u ahve access to this in /.kube (folder) --> config (will create)
+
+                 . kubectl get nodes --> this will gieve the current nodes running
+				 . run the expense-k8 and check the application is running .
+				 .(kubectl apply -f ../backend/manifest.yaml)
+				 .kubectl get svc
+				 .kubectl get svc -n expense
+				 
+
 Cluster Upgrade:- . we are using terraform based eks cluster we have blue node group and green node groups
 ---------------   . Blue is the current running version   we will create same set of greend node and 
 				  
@@ -1116,23 +1145,27 @@ Cluster Upgrade:- . we are using terraform based eks cluster we have blue node g
 															
 					(change the sg to remove access to other teams)
 				   
-				   4, upgarde green also to 1.31
+				   4, upgarde green also to 1.31 (in node we will have update option take force upate)
 				   
 				   5, we will cordon blue node , uncordon green nodes 
 				    (kubectl cordon ip-address)
 				   
 				   6, drain all blue nodes,(means all nodes will move to green) 
-				    (kubectl drain ip-address)
+				    (kubectl drain node ip-address)
 				  
 				   7, delete blue node group.
 				   
 				   .(if version change to 1.32v then green will move to blue and green will be deleted)
-			
-.VM to containers migration (k8):-
+
+.VM to containers migration (k8):- vm to micro services.
 --------------------------------
 .in migration project you want to migrate the VM to Containers
  there we have existing- ALB at time time u dont need to create the new ALB  through ingress
  you can go with existing ALB.
+ 
+ . why we need to use  existing alb because alb & ingress are not part of the cluster 
+   if we create we will have more control and any how we have existing alb so this may be 
+   good approch.
  
  steps:-
  ------
@@ -1157,6 +1190,7 @@ eksctl create iamserviceaccount \
 --approve
 
 .helm repo add eks https://aws.github.io/eks-charts
+. eksctl utils associate-iam-oidc-provider --> 
 
 .helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system 
 --set clusterName=expense --set serviceAccount.create=false --set serviceAccount.
@@ -1165,7 +1199,8 @@ name=aws-load-balancer-controller
 .helm list(check )
 .helm list -n kube-system(check the details are listed)
 .kubectl get pods -n kube-system
-
+.kubectl logs aws-node-id -n kube-system
+.kubectl delete svc frontend - n expense.
 -----------------------------------------------------------------------------------------------------
 
 .Topics:-
@@ -1178,6 +1213,15 @@ name=aws-load-balancer-controller
 
 1, How to push images to ECR:- . In project we dont use docker images we will use ECR images.
 -----------------------------  . create a image in ecr and push the image form ecr
+
+.ECR(ELASTIC CONTAINER REGISTRY):-
+ steps: . Build a docker image 
+ -----  . check the ecr push command to login to aws ecr
+		. run (aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 983015583980.dkr.ecr.us-east-1.amazonaws.com)
+		. tage the image (docker tag backend:v1 983015583980.dkr.ecr.us-east-1.amazonaws.com/expense/backend:v1)
+		. Now docker push (docker push 983015583980.dkr.ecr.us-east-1.amazonaws.com/expense/backend:v1)
+		. take the image from ecr (image-id)
+
 
 2. DaemonSet:- .If you run daemon-set make sure of a pod runs on each and every worker
 ------------   .It is usefull when you want to Moniter the node and if you want any metrics
