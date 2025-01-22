@@ -4,10 +4,10 @@
 what terraform solves:-  manual infra
 ---------------------
 
-How we are solving :- through script , infra asa code and we apply
+How we are solving:- through script , infra asa code and we apply
 -----------------
 .terraform solves manual infra that every thing in console ,by mistake if someone edit worng then app will go down.
- aplication restore back to previous stage.
+ aplication restore back to its  previous stage.
 
  .crud :- we will use crude opperations like creating,read.update,deleting the infra.
  ******
@@ -213,7 +213,7 @@ intv q:-
 				 
 locking:- if two person in creating the same infrastructure at time so there is a chance of duplication 
 --------- and errors to avoid that terraform has created terraform.lock file
-          . for locking we will use dynamo bd
+          .for locking we will use dynamo bd
 		  
 		  
 provisoners :- provisioners are used to take some actions locally or remotely  in order to prepareing the servers.
@@ -507,7 +507,7 @@ members --> servers
 .Host path and context path:-
 -----------------------------
 
-client --> BA--> Architect-->-->
+client --> BA--> Architect-->(LB)
 backend--> backend lb--> backend 
 frontend --> frontend lb--> frontend Tl
 database-->bd 
@@ -574,7 +574,7 @@ if there is traffic increase
 -------------------
 1. create ec2 instance
 2. configure with backend
-			You should have playbooks ready
+			You should have ansible-playbooks ready
 			remote provisioner
 			terraform variables --> Shell --> ansible
 			ansible-pull
@@ -640,6 +640,19 @@ if there is traffic increase
 
 .terraform-target :- it will target specfic block (terraform apply - target =(id_name)
 -------------------
+Flow :-
+------
+.ec2
+.configure
+.stop
+.ami
+.delete instaces
+.target group
+.lanch template
+.auto scalling group
+.autoscalling group pollicy
+. r53 -->ALB --> listener --> rule --> target group --> health check --> instance
+
 
 Rolling update
 -----------------
@@ -693,4 +706,4 @@ expense-infra-creation:-
 6. and we connected to vpn for vpn we have used openvpn we have take a image in vpn and we 
    configure that just like ec2-instance and we have connected to openvpn and we are our desired location.
    
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
