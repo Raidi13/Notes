@@ -643,15 +643,19 @@ if there is traffic increase
 Flow :-
 ------
 .ec2
-.configure
-.stop
-.ami
+.configure it 
+	  ansible palybook ready
+	  remote provisioner
+	  terraform variable --> shell > ansible
+	  ansible --> pull
+.stop ec2
+.take ami
 .delete instaces
-.target group
-.lanch template
-.auto scalling group
+.create target group
+.create lanch template
+.auto scalling group --> launch template target group
 .autoscalling group pollicy
-. r53 -->ALB --> listener --> rule --> target group --> health check --> instance
+.R53 -->ALB --> listener --> Rule(host based routing) --> target group --> health check --> instance
 
 
 Rolling update
@@ -659,7 +663,8 @@ Rolling update
 4 instances --> 2 instances
 
 1. stop all the backend services in all instances and update the application using ansible
-2. create one new instance using new version, once this is up, delete one old instance	
+2. 	create one new instance using new version, once this is up, 
+	delete one old instance	.
 	create second instance and delete one more old instance
 	create third instance and delete one more old  instance
 	create fourth instance and delete one more old instance
