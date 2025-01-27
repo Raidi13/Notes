@@ -865,6 +865,9 @@ Docker architecture:-
 . if not exit , it will pull registry /hub 
 . create a container out of it
 . runs it and send the output to the client
+
+
+
 .what are the disadvantages in docker :-
 ****************************************
 
