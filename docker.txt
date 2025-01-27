@@ -4,7 +4,7 @@
 1.In old enterprise :- everything is together means frontend & backend may be teams are diffrent.if you are doing any changes in frontend or in backend you need to deploy both.
 -----------------      again they have to test and they have ready it for deployment at that  time the resource utilize is not that much good.
 
-2.In monlithic :- they have sepereted frontend and backend if u r making changes in frontend , backend is not effected these two are connected with api 
+2.In monlithic :- they have sepereted frontend and backend if u r making changes in frontend , backend is not effected because these two are connected with api 
 --------------	  if frontend sends api request backend is responds with data in json format. so here some dependencys is reduce.
 	
 exmpl:- u can take e-commers like amazon or flipkart in that we have diffrent modules like .
@@ -35,7 +35,7 @@ exmpl:- u can take e-commers like amazon or flipkart in that we have diffrent mo
   (old enterprise because forntend & backend are in we are keeping as one file it takes more size)
  
  . in monolithic we have sepereted 
- . in microservices we have divided  in small here the file size is every small.
+ . in microservices we have divided ,here the file size is every small.
 
 ******* Here in this ceniro if one application size reduceing we dont need of heavy servers.****
 
@@ -60,16 +60,17 @@ contaiers dont block the resource they use resources dynamically.
      
 	 advantages of containers:
 	  ------------------------
-								  bare metal    |  vm    |contaiers
-	  1. the resource utilize is |     bad		| Average| good
-	  2.scalability is good		 | 	   bad		|Average | good
-	  3. cost 					 |   High		| medium | less
-	  4. reliabllity			 |	bad			| average| good
-	  5. performance			 | good         | low    | average
-	  6. portable				 |   no			| yes	 | yes
-	  7. security                | good			| low    | average
-	  8. auto scalling			 |   tough		| okay	 | easy
-	
+								        bare metal  |  vm    |contaiers
+	  1. the resource utilize is        |   bad		| Average| good
+	  2. scalability is good	        |   bad		| Average | good
+	  3. cost 					        |   High    | medium | less
+	  4. reliabllity 			 		|   bad	    | average| good
+	  5. performance					|  good     | low    | average
+	  6. portable				 		|   no		| yes	 | yes
+	  7. security                		|  good	    | low    | average
+	  8. auto scalling			 		|  tough	| okay	 | easy
+	  9. Consistent across       		|  no       | partly | yes
+	     Environment                                  yes
 ---------------------------------------------------------------------------------------------  
    
 example :-
@@ -145,6 +146,7 @@ docker commands:
 docker ps --> check the running containers
 docker ps -a --> all containers
 docker images --> checks the running images
+docker pull <image-name> --> Pulls the image from the docker repository/hub
 	
 . ** if you want to remove the container you have to stop firts and remove the container
   --- > docker stop id (container id)
@@ -223,6 +225,8 @@ in docker we need to take sudo su - (access)
 
 ** how can you open the port number in internet 
    A , BY using port forwding 
+   
+   ( we access services on a private network by mapping an external port to an internal port on your machine )
 
 
 ** if want to go in to the container and check --> docker exec -it container-id bash ( "IT" inpute ternmal)
@@ -230,7 +234,7 @@ in docker we need to take sudo su - (access)
   how you get the access to running container 
 A, by using docker exec -it id bash
 
-** if you want to inspect or get info of container  ---> docker inspect id 
+** if you want to inspect or get full info of container  ---> docker inspect id 
 ** to check the logs of container -- > docker logs id
 
 
@@ -254,8 +258,8 @@ poplure intvw qustions:-
 
 From :
 ------ 
-from shouid be the first instruction in docker file. it represents base os
-there is an exception ARG
+from shouid be the first instruction in docker file. it represents base os.
+there is an exception we can use ARGuments
 
 how do you build docker image?
 docker build -t <image-name>:<version>. --> (. represents current folder have docker file)
@@ -394,7 +398,7 @@ Intv :q:
 
 ARG VS ENV:
 -----------
-1. ENV variables can be access in image build time and container both
+1. ENV variables can be access in image build time and container creation time .
 
 2. ARG  is only accessed at the time of image creation.
 
@@ -580,10 +584,11 @@ exmpl:-
 .to check by removing container and re-create
  
  
-.Docker-compose:- if you are managing multiple containers running docker command
----------------   in the ternmal is not a good approch , so u can define a file called 
-				  docker-compose u can define all your services you can manage them proparly.
-				  u can start, stop , re-start easly.
+.Docker-compose:-.if you are managing multiple containers running docker command
+---------------    in the ternmal is not a good approch , 
+				 . so u can define a file called 
+				   docker-compose u can define all your services you can manage them proparly.
+				   u can start, stop , re-start easly.
  
  
  
@@ -826,7 +831,8 @@ A, as a simple example assume that milion of users are  using docker not every o
 .each layer is cached, when you push  it pushes the layers
 
 5,multi stage docker builds :- we are using multi stage docker builds in muti stage docker we have two docker files inside
-  -----------------------     inside one docker file no.one is used as builder we will copy the output from  1st docker file and save it into second docker file.
+  -----------------------     . inside one docker file no.one is used as builder we will copy the output from  
+							  . 1st docker file and save it into second docker file.
 
 .development and running :-- 
 
@@ -859,3 +865,38 @@ Docker architecture:-
 . if not exit , it will pull registry /hub 
 . create a container out of it
 . runs it and send the output to the client
+.what are the disadvantages in docker :-
+****************************************
+
+* Ther is no relibility since we have only one docker host. 
+  (When relying on a single Docker host, if the host crashes or fails, all the running containers will be down )
+
+* in docker there is no autoscaling. while increase in traffic
+
+* there is no load balancing in docker . because its supports container communication within a single host,
+
+* volumes are inside docker host are in poor volume management
+
+* secutity and no secret management in docker
+
+* no communication b/w containers in another host and network management is not good
+
+  * Due to  this cases we are using orchestration . 
+  
+  . for docker we have docker swarm all this future are little poor and tougfer in management as well 
+	  in kubernetes we can do easly .
+	
+  
+  * so orchestration is nothing but managing everything like deploying, scaling,
+     and operating containerized applications everything.
+    
+   
+setup:-
+------
+assignment:-
+------------
+1. there is a docker  host running
+2. no space left on device
+3. you need to add disk to the runnign instance
+4. mak sure docker directory /var/lib/docker is mounted to new disk
+5. migrate exising data to new mount  
