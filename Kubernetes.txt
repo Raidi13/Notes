@@ -1233,7 +1233,8 @@ name=aws-load-balancer-controller
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 4. K8-architecture:- Kubernetes run on  Master & Node Architecture 1 master will be the it will communication 
--------------------  with multiple Nodes.
+-------------------  with multiple Nodes.to communicate with cluster we use eksctl and to communicate with workernode 
+                     we use kubectl.
 
 
 In-master:-
