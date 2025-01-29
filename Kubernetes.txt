@@ -147,7 +147,7 @@ assignment:-
  Containers,Images,Volumes .
 
   Name spaces:-just like vpc you will have a dedicated isolated project to create your 
- ***********  workloads/resources
+ **********  workloads/resources
              (for a project there will be dedicated location that we have to use)
 		      
 			  *1st we need to create the name space for the cluster .
@@ -208,6 +208,8 @@ exmpl:- pod 1 have nginx container is there
 	A , the identity of 1st nginx is pod 1 as well the identity 0f 2nd nginx is pod 2 
 	    this names are diffrent inside anything can keep .
 		
+		.kubectl exec -it multi-container -c almalinux -- bash (-c :- specfic container)
+		
 	exmpl 2 :- pod 2 name with  nginx
 	           nginx with name also nginx
 			   
@@ -234,8 +236,8 @@ exmpl:- pod 1 have nginx container is there
 
 ** kubectl describe pod labels -----> full-information **
 	 
-.05-Annotations :- are used for  kubernetes external resources selectors
-**************
+.05-Annotations :- are like labels used for kubernetes external resources selectors
+**************     use spl characters like buildurl, imageregistry etc..
 	   
 .06-env :
 *********
@@ -294,13 +296,14 @@ our goal without toching the code, we need to change the values -----> varables
 
 services are 3 types:- services are use to communication with other pods.because ip address 
 ********************    are ephemeral (tmp) so u need to access other podes with that service. and
+					  
 					  . Pod to pod communication using dns and load-balancing. that will expose your pod
 					    using service to access from internet.
 		   
-1.cluster --> default only for internal pod to pod communication..
+1.cluster ip --> default only for internal pod to pod communication..
 		   
 		   
-2.node port -->  it opens  a port on node and expose to internet
+2.node port -->  it opens  a port on work node and expose to internet
 		         when u create a node port service a port is openend on each worker node
 			     any user hits any workernode it will be forward to pod.
 			    
@@ -417,10 +420,13 @@ create config-map-->create deployment -->create service	.
 
 
 ****************************************************************************************************************************************************************************
-.Volumes in kubernetes :- A Kubernetes volume is a directory containing data, which can be accessed by containers in a Kubernetes pod.
-**********************   The location of the directory, the storage media that supports it, and its contents, depend on the specific type of volume being used.
+.Volumes in kubernetes :- Kubernetes volume is like a folder where data is stored, and containers inside a Kubernetes pod can use .
+**********************    what’s inside the folder depend on the type of volume you choose.
 						 (Storage volumes always has to be outside the cluster that will be safe )
-			 
+
+
+	. our laptop is not safe right any time it can crash or burst due to you usage of apps and software & file . 
+	  so what will do we store data right .
 exmp:- external Hd ---> offline near to our computer more speed (EBS)
 ----   google drive ----> online somewhere in network less speed (EFS)
 			
@@ -431,7 +437,7 @@ exmp:- external Hd ---> offline near to our computer more speed (EBS)
 			 
 			  . what is provisioning in aws 
 			   (Provisioning in AWS Cloud, in simple terms, is like preparing and setting up 
-			      the resources you need to run your applications or services.)
+			    the resources you need to run your applications or services.)
 EBS :- 
 -----
 1, WE NEED TO CREATE THE VOLUMES .
@@ -453,13 +459,14 @@ vol-03c92999763219936
 				  
 .( we need to attach policys AmazonEBSCSI driverpolicy.) in IAM roles.. you need to give permissions --> instance volume -->iam roles  -->amazonebsdrivers.
 				  
-***. Persistant Volume and Presistant volume claim :- pv is the physical representation of external voulme.
-   ***********************************************   .pv --> it represents the physical storage like EBS/EFS.
+***. Persistant Volume and Presistant volume claim :- PersistentVolume (PV) is the physical representation of external storage volumes in Kubernetes.
+   ***********************************************   .It represents storage resources like EBS (Elastic Block Store), EFS (Elastic File System), 
+														or other external storage solutions.
 													
-													 .pv is cluster level and pv creation is adminsteration level 
+													 .PV is a cluster-level resource, and its creation is typically managed by a Kubernetes administrator.
 													
-													 .k8 created a wrapper objects to manage underlying volumes ,
-													  because k8 engineer will not have full idea on volumes
+													 .kubernetes created a wrapper objects to abstract and manage underlying volumes. ,
+													  Kubernetes engineers may not have detailed knowledge of the underlying storage systems.
 
 .
 
@@ -1048,11 +1055,13 @@ eksctl create iamserviceaccount \
 --region <us-east-1> \
 --approve
 
+ .aws iam create-policy \
+    --policy-name AWSLoadBalancerControllerIAMPolicy \
+    --policy-document file://iam-policy.json
+
 .helm repo add eks https://aws.github.io/eks-charts
 
-.helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system 
---set clusterName=expense --set serviceAccount.create=false --set serviceAccount.
-name=aws-load-balancer-controller
+.helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=expense-dev --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller
 
 .helm list(check )
 .helm list -n kube-system(check the details are listed)
@@ -1116,7 +1125,7 @@ Topic:- .we use terraform to create cluster and upgrade(same in interview)
 					  blue-green deployment have zero down time approch 
 					  We will create same set of node along once everything is shifted to green we will delete the blue.
 
-check the nodes:- aws-eks update-kubeconfig --region us-east-1 --name expense-dev
+check the nodes:- awseks update-kubeconfig --region us-east-1 --name expense-dev
 ------           .if u ahve access to this in /.kube (folder) --> config (will create)
 
                  . kubectl get nodes --> this will gieve the current nodes running
@@ -1181,12 +1190,12 @@ Cluster Upgrade:- . we are using terraform based eks cluster we have blue node g
 Run :-
 -----
 eksctl create iamserviceaccount \
---cluster=<cluster-name> \
+--cluster=expense-dev \
 --namespace=kube-system \
 --name=aws-load-balancer-controller \
---attach-policy-arn=arn:aws:iam::<983015583980>:policy/AWSLoadBalancerControllerIAMPolicy \
+--attach-policy-arn=arn:aws:iam::983015583980:policy/AWSLoadBalancerControllerIAMPolicy \
 --override-existing-serviceaccounts \
---region <us-east-1> \
+--region us-east-1 \
 --approve
 
 .helm repo add eks https://aws.github.io/eks-charts
@@ -1228,8 +1237,10 @@ name=aws-load-balancer-controller
 				in underlying worker nodes 
 
 3.Service Account:- .It is not human user it is created system 
------------------   exmpl: if trainee in compny he can create pods, but he can get the secret or the list the secrets.
-
+-----------------   exmpl: if trainee in company he can create pods, but he can get the secret or the list the secrets.
+					
+					. Run the pod with service account and this service account have access to get the service
+					
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 4. K8-architecture:- Kubernetes run on  Master & Node Architecture 1 master will be the it will communication 
@@ -1255,9 +1266,9 @@ if everything  is ok  api-server forward to Scheduler.
 
 .node controller:- .Monitoring the node continously
 
-.Job controller:- .checks the job
+.Job controller:- .checks the job and it exits.
 
-.End-point slice controller:- .Establish connection between service nad Pods
+.End-point slice controller:- .Establish connection between service and Pods
 
 .SA controller:- create defacult SA for namespaces
 
