@@ -444,10 +444,11 @@ EBS :-
 2, WE NEED TO INSTALL THE DRIVERS. 
 3, EKS NODES SHOULD HAVE PERMISSIONS TO ACCESS EBS VOLUMES.
 				 
-( where the servers is located  the disk also locate there it self ) us-east-1b
-(we need to create the volume of 20g in us-east-1b) rest we can describe later where it has to go.)
- (copy the volume id)
-vol-03c92999763219936
+.( where the servers is located  the disk also locate there it self ) us-east-1b
+.(we need to create the volume of 20g in us-east-1b) rest we can describe later where it has to go.)
+ 
+.(copy the volume id)
+.vol-03c92999763219936
 				
 .install drivers :- this is adminsteration task
 -----------------
@@ -584,7 +585,7 @@ expense project devops engineer got a requirement to have a volume
 	   . kubectl get nodes.
 	   
 	   .when u face any issue in kube-config or disturb
-	     ( aws-eks --region  us-east-1 update-kubeconfig --name expense )
+	   .( aws-eks --region  us-east-1 update-kubeconfig --name expense )
 		
 		. EFS SG shouid allow traffic on 2049 from the sg attached to eks worker node .
 		
@@ -614,7 +615,7 @@ statefullset vs deployment
 2. depolyment is for stateless applications.
 		
 3. statefulset will have headless service along with normal service 
-   .it requires pv and pvc is mandatory in setfull-set.
+   .it requires pvc is mandatory in setfull-set.
 
 4. deployment will not have headless service.
 				
@@ -903,7 +904,8 @@ exmple:- is noting but pantaing (if apply paint to currency note it will not tak
 				
  Mostly where we use Taint & Tolerations in projects:-
  -----------------------------------------------------
- 
+. Taints & Tolerations = Restrict pods from certain nodes.
+
 1. Project specific worker nodes. (may be any special conffiguration are there)
 2. Special hardware . gpu Based.
 
@@ -914,15 +916,18 @@ exmple:- is noting but pantaing (if apply paint to currency note it will not tak
 ***** Refer readme k8-taint-tolerations ***************
 
 
-.Affinity and  Anti-affinity:-
+.Affinity and  Anti-affinity:- or (node affinity)
 ------------------------------
-. Affinity will hard rule that you have to match the labels if any one try to change at the time of execution time .
+
+.Affinity & Anti-Affinity = Influence preferred or required scheduling decisions.
+
+.Affinity will hard rule that you have to match the labels if any one try to change at the time of execution time .
             and other wise it will not execuit required during scheduling.
 
-. Ani-Affinity is soft rule if the given values doesn't met also it will still schedule the pod
+.Anti-Affinity is soft rule if the given values doesn't met also it will still schedule the pod
                prefered during scheduling
   
-. Pod-affinity:- we will inform backend pod to run where cache is running 
+.Pod-affinity:- we will inform backend pod to run where cache is running 
 				. like 2nd pod runs where the 1st pod is running.we can match the 
 				  labels of 1st pod into the 2nd pod so we make sure where the 2nd pod is running 
 				  where the 1st pod runs
