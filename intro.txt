@@ -1,0 +1,107 @@
+Self introduction:-
+==================
+. My name is raidi kartheek ,i have 5 years of experience . i earlier worked as java developer
+  later i shifted to DevOps and Cloud.
+
+. I am now working as senior Devops Engineer in my project
+
+. we are using RHEL9 ,Ansible for configuration management and VM deployments,
+  Terraform for Iaac, Jenkins for CICD, multiple scanning tools like Sonar,Metasploit, Veracode ,ECR scan,
+  Docker for image buliding, kubernetes for container Orchestration ,
+  and our testing team use few testing frameworks like Selenium and Cucumber, and shell script for simple automations and Cronjobs
+  we have seperate monitoring team for ELK and prometheus.
+  and we are using python for cloud and other automations.
+
+. we take care of all the deployment form development to production through our automated process.
+
+. we let developers only focuse on programming we handle everything  and also.
+
+. we are follwing Devops , shiftleft,Build once and run anywhere stragies. we have our centralised CICD
+  pipelines powered by Jenkins shared libraries
+
+. we are following feature branching model . we have 2 types of branches .One is main as  long lived branches
+  everything else is feture branches.earlier we followed git model where we had master and development
+  as a long lived branches and release, feature and hotfix as short lived brances.
+
+. Developers create feture branches , once they push the code to remote branch we configure automated 
+  development pipelines through Jenkins webhooks.
+  
+. once they complete development they raise PR and get the approval. and We follow merege strategy.
+
+. we follwing  shift left where we can scan and test the application in early stages like development
+  so that we can filter majority issues while development is going on
+
+. we have sonarQube for static source code analysis and static application security testing. 
+  we have Quality gates configured where we it checks for 0 issue , 0 bugs ,  0 Vulnerabilities, Maintainbility and security rating is A.
+  Minimum code coverage is 80% if application failed to meet this criteria we will fail the Build.
+
+. we have Metasploit as open source scanning tool, where we scan all the dependencies of a application .
+
+. we are using veracode for dynamic applications security testing , before going for QA we submit our application URL as target in veracode for attack.
+  if we find serious issues we work with developer to resolve them. 
+  
+. we buid application in only dev environment we promote the same build into multiple environment with different configuration through helm charts , so here we addressed the issue of working in Dev and not to working in PROD.
+
+. we are using jenkins shared library, we  have centralised pipelines for different programming langugages with different deployment platform.
+  we have nodeJSEKS, JavaVM ,JavaEKS,pythonEKS Pipelines.
+  we make sure every component follow the same process of deployments.
+
+. When we move to QA environment, our developers trigger pipeline it can fetch 
+  the image from ECR deploy the application through our helmcharts then we are calling testing team pipelines for integration tests.
+
+. Before going for PROD, we have a CR process approval. 
+  Our support raises CR ticket in JIRA mentioning time, description, roll back plan, scanning results, testing results.
+  Once it is approved we trigger PROD piplines in deployment window.
+
+. Our pipeline checks for the JIRA status, deployment window. 
+  if everything is fine we fetch the image and deploy application in PROD environment.
+  Later developers a simple sanity check.
+
+
+
+ROLES & RESPONSIBILITIES:-
+=========================
+. We are a team of five members, leveraging JIRA as our project management tool to log and track our work. 
+  Our workflow is structured around the Agile Sprint Process, 
+  and we hold daily stand-up meetings .
+. My team leader assings the task to us.
+
+. we onboard projects into our Devops process.
+. we takecare of infra through terraform in all the environment.
+. we developed our own terraform modules. and we maintened these modules.
+
+. we meet with development team explaining our piplines , understanding how they are developing and merging.
+  we teach them feature branching and  PR process.
+  
+. we will onboard them into jenkins,sonar, veracode,metasplot, kubernetes,Ansible if they are following VM deployments.
+  we create the required the infra through terraform.
+. we will setup the pipeline for them and we will assist fr the first 2 production release.
+
+. we will maintain existing application if they face any issues in any environment
+
+. Application teams frequently upgrade their versions we will assist them if they face any issues
+  we take care of EKS upgrades, terraform upgrade , jenkins agents.
+
+. Each time SRE team upgrades other tools, we check our pipelines with our internal Hello world application for compatability issues.
+
+. we continously have a montly meetings to discuss on the improvement. yesterday we had a meeting on using k8 jenkins images instead of Vm.
+  We planned to scan the best images of our application before we use.
+
+. we are planning to develop the centralised pipelines for  .NET and go langugage.
+. we are using ansible playbook to create the AMI of our legacy applications.
+
+. our application are secure, scalable(HPA and VM autoscale), HA(2 AZ)
+. We will take care of persistant volumes if required by application teams.
+. We continously upgrade our ingress, EBS and EFS drivers.
+
+
+What are the challanges you faced:-
+=================================
+. i was not aware of kubernetes earlier. we where dealing legacy VM application in my previous project.
+. in that they where they asked to EKS UPgrade so i go through the document and with terraform i have impliminted 
+  with blue & green deployment so it took my near to 1 month.
+  
+. and later i was asked to setup ingress for one new project so it was highly challing for me
+  since it is going to public . i need to make sure scan and works good and application the secure in all the environment.
+  then i had to proceded to ingress.
+  
