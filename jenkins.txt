@@ -141,6 +141,10 @@ Expense application integration in jenkins:-
 3, aws credintails
 4, aws steps
 
+
+.http://jenkins.aws-dev-rk.online:8080/ --> To login into jenkins
+.install jenkins user id in jenkins to get the password.
+
 .what is upstrem and down stream in jenkins:-
 --------------------------------------------
 . when they are dependencies between multiple jobs in jenkins we can trigger pip line
@@ -204,9 +208,15 @@ sequence
 	 .sg
 	 .vpc
 
+. aws-command line 
+ --------------
+ . terraform plan -out=tfplan
+ . terraform apply tfplan
+ . terraform destroy -auto-approve
 
-STEPS:- CICD
-------
+
+.STEPS:- CICD
+ ------
 .sg is down steam for sg
 
 .vpc is upstrem for sg
@@ -217,8 +227,8 @@ We need to set up the eks
 .and we need to have ingress resources (use if listerns and rules are not created) &
 .use the target group binding ((use if listerns and rules are created)
 
-APP CICD
-=========
+.APP CICD
+ =========
 . after this one time setup we can create
    . Build
    . unit test
@@ -228,4 +238,144 @@ APP CICD
    . heml to deploy
    
    
- 
+. 1st we need to set all the infra ready 
+	.vpc,sg,bastion,rds,eks,acm,alb,ecr,cdn,
+
+. RDS has to connect to port 3306 from bastion and from eks worker-nodes.(because pods will be in eks nodes)
+. Connect to configure mysql ( mysql -h expense-dev.czn6yzxlcsiv.us-east-1.rds.amazonaws.com -u root -pExpenseApp1 )
+							  . USE transactions;
+							  . CREATE TABLE IF NOT EXISTS transactions (
+									id INT AUTO_INCREMENT PRIMARY KEY,
+									amount INT,
+									description VARCHAR(255)
+								);
+							 . CREATE USER IF NOT EXISTS 'expense'@'%' IDENTIFIED BY 'ExpenseApp@1';
+							 . GRANT ALL ON transactions.* TO 'expense'@'%';
+							 . FLUSH PRIVILEGES;
+							 
+. Target goup banding : the docker file is very thin that they are below 1024 ports for that resion we are using 8080 in nginx conf
+                        target group health check has to be 8080, and service in frontend has to be 8080 other wise we have  to run as root user.
+						
+. configure eks cluster --> steps.	
+
+. then configure backend --> check the docker file ---> jenkins file --> push the image to ECR
+   . Use ECR image credintails to login and push the image to docker hub.	
+   
+   . create the backend expense in jenkins
+   . add helm bakend file to jenkins backend make user 
+   
+   . use sed editor to insert that will be tempory edit (if you want use as perminent editor (sed -i '1 hello') to append (sed '1 a hi') (sed 's/local/LOCAL')
+   
+   . after backend is configure  check --> kubens expense --> helm list --> kubectl get pods --> kubectl logs 
+   
+   
+   . Same way configure the frontend .
+     . docker file --> jenkins-file--push the image
+	 
+	 . after configure the tgb 
+	 (. check -->  kubectl get target group binding )
+	 
+	 
+. Target goup banding :- you can use target group you can use any one of this either ingress or target group .
+                         (if you use ingress  remove listerns,rules,target group from 70-alb because
+						  we have created our own resources because generally we dont give access to k8 for external useage 
+						  what ever we had in our hands we can create them using terraform with the kubernetes we can manage them dynamic )
+						  
+						  
+						  
+-------------------------------------------------------------------------------------------------------------------------------------------
+DevSecOps:- 
+---------
+.sonar.public.aws-dev-rk.online:9000 (or) (ip-address:9000)
+
+
+. shift-left:- . shifting the security scannings and testing in dev before pushing the code to main branch
+------------   . when developer push the code to feature branches we should scan and test
+			   
+			   1, static source code analysis:->  we can use SonarQube (wether you code is execute properly or not)
+			   
+			   2, static application security testing:-> we can use SonarQube (means in you code do u have any security issue are there)
+			   
+			   3, dynamic application security testing :-> Veracode (if you application is in public how public attach on it)
+			   
+			   4, dependencies scan:-> NexusIQ/ Git hub, blackduck
+			   
+			   5, image scanning :-> ECR Scanning
+			   
+. unit testing :-> it has to be done by developers
+. functional testing --> it has to be done by testers (multiple-function if testing will be functional testing)
+			   
+			   
+.SonarQube: if you want to configure the sonar scan you do it by docker image or by ec2 instance(t3.medium) and ami id
+----------
+            .steps-->
+			 . install the plugins of sonarqube
+. Multi branch pipeline:- . A pipeline should be there for every feature branch to support their development
+------------------------
+			 . 
+			 
+.Sonar quality gate:- we have quality gate for our project implimented on  overall code & new code  we have set the quality gate
+-------------------
+. 0 issues
+. 0 bugs
+. security rating A
+. Maintainability rating A 
+. code coverage 80%
+. code smells 0
+. vulnerabilities 0
+
+
+.Shared pipeline Continuous Integration (CI) and
+                 Continuous Deployment (CD)		:- pipeline is a function it takes input and runs the pipeline
+--------------------------------------------	   . any number of project can call this shared pipeline at a time
+												     no need to maintain pipeline differently for diffrent project
+													 easy to update & enforce standed at the high level.
+													 
+. exmpl: backend file owner is developer & jenkins file owner is devops team 
+        
+		.In a one repositry two team cant work it will bring big problm
+		. if we have a chnage we cant distrub the development & devops we can keep 
+		
+		ci:-
+		. image is our output
+		. dev --> use the image, but diffrent config values-dev.yaml ecr.
+		. qa/uat/prod --> use the same image but diffrent config values-prod.yaml
+		
+Build once run any where:-
+------------------------
+*.we follow seperate CI and CD ,Because we can use CD job to deploy our application to multiple environment
+ build once and run any where
+
+. (when ever the developer push the code no need to deploy worst case 50th time deploy shouid be done.)
+
+. our pipeline will have an option to choose deploy or not
+. backend --> upstrem
+. backend-deploy --> just helm charts.
+		  
+. Central devops engineers:- They will look into 
+---------------------------
+. Ansible Roles
+. Terraform Modules
+. jenkins central pipelines
+
+1. what is the programming language
+2. what is the deployment platform
+3. what is the build tool --> in java tool maven and gradle, ant
+
+
+.Project Onboarding:-
+--------------------
+1, what is your programming Language
+2, "    "   "   deployment platform
+3, "    "   "   branching strategy (yours is feature branching strategy)
+
+.we need create a folder in jenkins SOP:- If a new project comes, we meet development team and setup below things
+---------------------------------------
+. Jenkis folder
+. sonarqube
+. k8 name space
+. ecr repos
+. veracode we need to create the target
+. github dependabot
+. dockerfile
+. helm charts
