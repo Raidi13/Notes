@@ -1,7 +1,7 @@
 Self introduction:-
 ==================
-. My name is raidi kartheek ,i have 5 years of experience . i earlier worked as java developer
-  later i shifted to DevOps and Cloud.
+. My name is Raidi Kartheek, and I have over 5 years of experience. I previously worked with Ansible and Shell scripting, 
+  but later transitioned to DevOps and Cloud.
 
 . I am now working as senior Devops Engineer in my project
 
