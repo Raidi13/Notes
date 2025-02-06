@@ -1,7 +1,7 @@
 Self introduction:-
 ==================
 My name is Raidi Kartheek, and I have 5 years of overall experience. I spent 1 year working with Ansible and Shell scripting, 
-and the last 4 years focusing on DevOps and Cloud
+and the last 4 years focusing on DevOps and Cloud.
 
 . I am now working as senior Devops Engineer in my project
 

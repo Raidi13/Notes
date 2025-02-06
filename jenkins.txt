@@ -158,7 +158,19 @@ Expense application integration in jenkins:-
   
 .what are the jenkins agent you are using ?
  -----------------------------------------
- .
+1. Static Agents:
+	Dedicated EC2 Instances: If you have a long-running EC2 instance dedicated as a Jenkins agent.
+	On-Premise VM: A manually configured VM running a Jenkins agent.
+	Dockerized Agent: Running Jenkins agents inside Docker containers.
+
+2. 	Dynamic Agents (Autoscaling on Demand):
+	Kubernetes Agents: Using Jenkins Kubernetes plugin to spin up pods dynamically as Jenkins agents.
+	Amazon ECS Agents: Running Jenkins agents as ECS tasks on AWS.
+	Terraform-Managed Agents: Spinning up Jenkins agents dynamically using Terraform.
+
+3. Cloud-Based Agents:
+	AWS EC2 Spot Instances: Cost-effective, auto-scaled agents using AWS Spot Fleet.
+	Jenkins Cloud Agents: Using cloud providers like Azure, GCP, or AWS for on-demand agent provisioning.
   
   
 Parallel In Sequential:-
