@@ -1,7 +1,7 @@
 Self introduction:-
 ==================
 . My name is Raidi Kartheek, and I have 5 years of overall experience. I spent 1 year working as a java developer , 
-	and the last 4 years focusing on DevOps and Cloud.
+  and the last 4 years focusing on DevOps and Cloud.
 
 . I am now working as senior Devops Engineer in my project
 
@@ -14,10 +14,12 @@ Self introduction:-
 . we take care of all the deployment form development to production through our automated process.
    we let developers only focuse on programming we handle everything else.
 
+. we are follwing Devsecops ,shiftleft,Build once and run anywhere stragies. we have our centralised CICD
+  pipelines powered by Jenkins shared libraries --> Tools
 
-. we are follwing Devops ,shiftleft,Build once and run anywhere stragies. we have our centralised CICD
-  pipelines powered by Jenkins shared libraries
 
+git:-
+----
 . we are following feature branching model . we have 2 types of branches .One is main as  long lived branches
   everything else is feture branches.earlier we followed git model where we had master and development
   as a long lived branches and release, feature and hotfix as short lived brances.
@@ -25,8 +27,10 @@ Self introduction:-
 . Developers create feture branches , once they push the code to remote branch we configure automated 
   development pipelines through Jenkins webhooks.
   
-. once they complete development they raise PR and get the approval. and We follow merege strategy.
+. once they complete development they raise PR and get the approval. and We follow merege strategy. 
 
+devsecops:-
+-------
 . we follwing  shift left where we can scan and test the application in early stages like development
   so that we can filter majority issues while development is going on
 
@@ -35,9 +39,12 @@ Self introduction:-
   Minimum code coverage is 80% if application failed to meet this criteria we will fail the Build.
 
 . we have Metasploit as open source scanning tool, where we scan all the dependencies of a application .
+  this  tools recommends any upgrade or issues on the dependencies. based on this our developers continously 
+  upgrade their dependencies.
 
 . we are using veracode for dynamic applications security testing , before going for QA we submit our application URL as target in veracode for attack.
   if we find serious issues we work with developer to resolve them. 
+ 
   
 . we buid application in only dev environment we promote the same build into multiple environment with different configuration through helm charts , 
 	so here we addressed the issue of working in Dev and not to working in PROD.
@@ -75,7 +82,7 @@ ROLES & RESPONSIBILITIES:-
   
 . we will onboard them into jenkins,sonar, veracode,metasplot, kubernetes,Ansible if they are following VM deployments.
   we create the required the infra through terraform.
-. we will setup the pipeline for them and we will assist f0r the first 2 production release.
+. we will setup the pipeline for them and we will assist for the first 2 production release.
 
 . we will maintain existing application if they face any issues in any environment
 
