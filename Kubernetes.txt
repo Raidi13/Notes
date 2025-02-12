@@ -1,4 +1,4 @@
-mysql directory :
+mmysql directory :
 
 /var/lib/mysql
 /var/lib/mysqld - daemon  conffiguration 
@@ -294,11 +294,13 @@ our goal without toching the code, we need to change the values -----> varables
 	. pod ip are ephemeral (temp) so it is not to good pod -pod with ip address
 					 
 
-services are 3 types:- services are use to communication with other pods.because ip address 
-********************    are ephemeral (tmp) so u need to access other podes with that service. and
+services are Networking :-
+**********************
+3 types:- services are use to communication with other pods.because ip address 
+   are ephemeral (tmp) so u need to access other podes with that service. and
 					  
-					  . Pod to pod communication using dns and load-balancing. that will expose your pod
-					    using service to access from internet.
+. Pod to pod communication using dns and load-balancing. that will expose your pod
+  using service to access from internet.
 		   
 1.cluster ip --> default only for internal pod to pod communication..
 		   
@@ -945,15 +947,16 @@ Classic LB --> By default it creates classic load balancer
 			.it can't route traffic to different target groups
 			.it is not recommend by AWS
 	
-.Alb(Application-load-balancer):- .it is intelligent
-								 .it routes traffic to multiple tg based on host or context rules
-								 .it works on layer-7
+.Alb(Application-load-balancer):- 
+.it is intelligent
+.it routes traffic to multiple tg based on host or context rules
+.it works on layer-7
 	
-	Examples:- . if you open facebook in mobile it shows --> m.facebook which is optimized for smaller screens and touch interactions.
-	           . in laptop facebook. larger screens with mouse and keyboard interactions.
-			   
-			   . This differentiation is often achieved using Application Load Balancers (ALB) in a cloud environment,
-  			     leveraging Target Groups and Listener Rules.
+Examples:-. if you open facebook in mobile it shows --> m.facebook which is optimized for smaller screens and touch interactions.
+		  . in laptop facebook. larger screens with mouse and keyboard interactions.
+		   
+		  . This differentiation is often achieved using Application Load Balancers (ALB) in a cloud environment,
+			 leveraging Target Groups and Listener Rules.
 intq:
 ----
 
