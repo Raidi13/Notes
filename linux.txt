@@ -1,0 +1,517 @@
+Create Linux Server
+Connect to it
+Create firewall/Security group
+Command syntax
+few commands
+
+Authentication
+---------------
+1. What you know -> Username and password --> private systems
+2. What you have --> username and tokens(RSA, Authenticator) --> Public systems
+3. What you are --> Fingerprints, palm, retina, face, etc --> Public systems
+
+I can open google in browser using HTTP-80/HTTPS-443
+
+SSH protocol is used to connect to servers with particular number. port no 22
+
+0-65,535 ports == 65,536 ports
+
+ssh --> 22
+http --> 80
+https  --> 443
+mysql --> 3306
+
+what is the protocol, port, username, password/private-key
+
+ssh-keygen -f <file-name>, I should have some client to connect Linux server
+gitbash, putty, mobaxterm
+
+Amazon Linux 2023 == RedHat
+
+pwd
+clear
+cd --> change directory
+
+cd /
+
+/ --> root directory
+
+ls -l --> l for lenghty format
+ls -lr --> reverse order
+
+ls -lt --> based on time, latest on top
+ls -ltr --> latest on down
+
+hidden files starts with .
+ls -la --> a means all
+
+CRUD --> Create Read Update Delete
+
+sign up --> creating profile in amazon
+Login --> reading my account
+password change --> updating the profile
+account delete --> deleting the account
+
+placing order --> creating order
+changing order details --> updating order
+cancelling order --> deleting the order
+
+create, read, update and delete
+
+touch --> create file
+
+touch file-name --> creates the file
+cat > devops.txt --> adding text
+enter the text
+ctrl+D
+
+cat file-name --> reading the text
+
+
+cat >> file-name --> append/add the text
+
+
+cd .. --> one step back
+
+rm --> remove file
+
+mkdir --> create directory
+mkdir devops
+
+d--> directory
+- --> file
+
+rmdir --> remove only empty directory
+
+rm -r --> delete folder and content inside folder
+
+mv <old-file-name> <new-file-name>
+command-name <options> <inputs>
+mv awss.txt aws.txt
+-<single-char> or --<word> == Options
+
+absolute(complete) path and relative path
+
+cd .. --> relative path
+cd /home/ec2-user --> absolute
+
+
+ssh-i <private-key-path> ec2-user@ip --> connect (ssh -i linux-key.pem ec2-user@ip)
+
+uname -a --> system info
+
+.copy-file:-cp <sourcefile><dest-file> (cp /etc/password users)
+. how to cut the file
+
+grep <word-to-find> <file>
+DevOps devops both are different
+
+How to download the files?
+
+curl and wget
+
+wget <URL> : it will download the file-name
+
+curl <URL> :- it will not download the file just it will display on screen.
+
+. raidi kartheek --> i want to cut the name (cut -d "/' -f1).
+
+
+. | pipe:- echo url .txt | cut -d "/" -f7
+
+. awk :- it will cut coloumn wise also ( aws -f "/' '{print $NF) -> dynamic 
+. awk :- it will cut coloumn wise also ( aws -f "/' '{print $1F) -> 
+
+. linux-user-info :- /etc/passwd
+
+. use case :-i want to get at list of user in linux server 
+A, AWK -F ":" '{print $1f)' passwd
+
+a,AWK -F ":" '{print $1f,$3f)' passwd
+
+
+How to get lines in between the 5-10
+
+cat file name | head -n 10 | tail -n 5
+
+tail -f <log-file> --> How to see running log
+
+/var/log/messages
+
+
+Editor
+-----------
+vim --> visually improved
+
+vim <file-name>
+
+Colon/Command Mode
+---------------
+:q --> Quit
+:wq --> write and quit
+:q! --> dont save the changes and exit
+:set nu
+:set nonu
+:/<word-to-find> --> search from top
+:?<word-to-find> --> search from bottom
+:%d
+:1d --> delete 1st line
+:s/word-to-find/word-to-replace/g
+:%s/word-to-find/word-to-replace/g
+
+:%d --> delete everything
+. ctrl+r --> what word and what you wanna replace with
+
+. : s/which-word/what-you-want --> replace a word where your cursor is  and
+    and only first occurence
+. : s/which-word/what-you-want/g --> all occurence in the lines
+
+. : 3s/which-word/what-you-want/g --> all occurence in 3rd lines
+. : %s/which-word/what-you-want/g --> all occurence in file
+
+
+. esc mode:-
+-----------
+. u  --> undo
+. shift+g --> goes to bottom
+. gg --> goes to top
+. yy --> copy-file
+. p --> paste
+. 10 past --> 
+. dd --> delete all the line
+. shift+g --> takes bottom
+
+permissions:- -rw-r-r--
+------------
+.rw -> 4 owner of the file --> u 
+.r-:- 2 which group  he belonge to-find --> g
+.r--:-1  others --> o 
+
+. read :- 
+. write :-
+. execute:-
+
+. Linux administration:-
+-----------------------
+sudo su - _--> super user access
+
+
+. id --> gives all the info about current user
+
+useradd ramesh:-
+id ramesh --> display ramesh info
+
+create user
+useradd <user-name>
+
+id --> gives all info about current user
+
+useradd ramesh
+id ramesh --> displays ramesh information
+
+when you create user, by default a group will be created on the same username
+
+/etc/passwd --> users info
+/etc/group --> group info
+
+passwd <user-name>
+
+passwd ramesh --> setup the password for ramesh
+
+create devops group and add ramesh to devops group
+
+groupadd devops
+every user have atleast one primary group and multiple secondary groups
+
+usermod -g devops ramesh --> adding ramesh to devops group
+
+ramesh primary --> devops
+ramesh secondary --> testing
+
+usermod -aG testing ramesh --> adding ramesh to testing group as secondary
+
+gpasswd -d ramesh testing --> delete ramesh from testing
+
+created his user
+created group
+added him to group
+you can remove from group
+
+
+if employee leaves the organisation
+-------------------------------------
+1. remove him from the group
+2. then delete the user
+
+a user must have atleast one primary and one secondary group
+
+usermod -g ramesh ramesh
+userdel ramesh --> ramesh user and ramesh group both will be deleted
+
+groupdel
+
+suresh, suresh123
+
+inform suresh, that his user is creatd
+
+18.212.106.66 --> he should login with username and password
+
+by default, linux OS will not allow password authentication, it will only allow key based authentication
+
+systemctl restart sshd
+
+/home/suresh
+
+.ssh --> authorized_keys --> public key
+
+Linux admins will ask for suresh public key... Suresh generates key pair and send public key to Linux admin
+
+400 --> read access only to user, even suresh should not have write access
+
+Ownership
+-------------------
+chown --> change ownership
+
+private key, suresh
+
+/home/suresh --> authorized_keys
+
+directory --> 700
+authorized_keys --> 400
+
+directory --> 600
+
+.ssh --> 600
+authorized_keys --> 400
+
+Package management
+------------------------
+A software have lot of dependencies on other softwares
+
+rpm --> redhat package manager
+
+identify the dependencies, install the dependencies and finally install the package you want
+
+yum --> dnf
+
+/etc/yum.repos.d/
+dnf install 
+
+dnf list installed
+
+**how can check cpuinfo, memory info, OS
+	/etc/os-release
+	/proc/cpuinfo
+	/proc/meminfo
+
+Service Management
+---------------------------
+serive start, service stop, service restart, status check, enable, disable
+
+systemctl status sshd
+
+HTTP --> 80
+
+Nginx --> install this package
+start the service
+
+dnf install nginx -y
+
+http://54.198.23.187:80
+
+SG --> port no 80 allowed
+forward request to Linux Server
+
+enable --> by default enabled services will start automatically
+
+Process Management
+--------------------------------
+a sequence of steps to be executed to complete a task...
+
+Office
+---------
+Delivery manager
+
+1. Team Lead
+2. Senior Engineer
+3. Junior Engineer
+4. Freshers/Trainees
+
+
+Freshers/Trainees --> JE
+JE --> SE
+SE --> TL
+TL --> DM
+
+DM --> 001
+TL --> 002
+SE --> 003
+JE -->004
+Trainees --> 005
+
+Child 005 --> 004(Parent)
+004 --> 003
+003 --> 002
+002 --> 001
+001 --> Root Process
+
+
+nginx --> PID should be there
+
+ps -ef | grep nginx
+
+foreground --> BLOCKS the screen, runs in foreground
+background --> runs in background, you can do other works
+
+
+
+Network Management
+-----------------------
+ports check
+
+netstat --> network statistics
+
+netstat -lntp --> it will tell you what ports are open
+
+
+
+A --> IP address
+CNAME --> another domain redirect
+MX --> Mail servers
+NS --> Nameservers
+SOA --> Authorization
+TXT --> validation purpose.
+
+Forward proxy and reverse proxy
+--------------------------------
+1. You can watch restricted content
+2. You can change Geo location
+3. client side proxy, only client is aware of proxy
+4. Hiding client identity
+5. Traffic monitor
+6. Secure connections
+7. Content access restriction
+8. We can use it for cache purpose
+
+Reverse Proxy
+-------------------------
+1. Only Server is aware of proxy
+2. Security between clients and servers
+3. as load balancer..
+4. SSL termination
+
+/etc/nginx/nginx.conf --> default conf
+/usr/share/nginx/html
+/var/log/nginx
+
+include /etc/nginx/default.d/*.conf;
+
+upstream backend {
+      server 172.31.44.133; 
+      server 172.31.38.145;
+   }
+   
+proxy_http_version 1.1;
+
+location / { proxy_pass http://upstream/; }
+
+location /health {
+  stub_status on;
+  access_log off;
+}
+
+/usr/share/nginx/html --> default
+
+IP or IP/ --> /usr/share/nginx/html/index.html
+
+Linux folder structure
+----------
+/ --> root directory of the OS
+/bin(binaries) --> essential commands are here. ls, cat, grep, etc.
+/sbin(system binaries) --> admin commands, reboot, iptables, etc.
+/boot --> when linux server started, it refers boot directory for system configuration
+/dev(devices) --> monitor/terminal, keyboard, printers, etc.
+/etc(extra configuration) --> system configuration files, service configurations, etc.
+/home(home directory of users) --> all users directory are here, their personal files, user related configs..
+/lib(Libraries) --> libraries/dependencies required by OS equal to .dll in windows
+/lib64(64 bit libs)
+/media(Media devices) --> CD, DVC, USB, etc.
+/mnt(mount) --> adding extra disks
+/opt(optional) --> if you want third party applications, custom applications you can keep here
+/proc(processor) --> /proc/cpuinfo /proc/meminfo
+/root (Root user) --> home directory of root user
+/run (Running information of server)
+/srv(service files) --> When you use your server to serve as file server, you can use this
+/swap(Swap space) --> 1GM ram, OS will use this swap space for extension of RAM. Reserver space
+/sys --> system kernal info, devices info, etc
+/tmp --> temporary directory, not at all important
+/usr --> shared files and docs between all users...
+/var(variables) --> logs and messages
+
+/etc
+/opt
+/var
+/bin
+
+Linux is completed 
+
+Configuration
+----------------------
+1. Install application runtime --> nodejs, java, etc.
+2. create a user
+3. create a folder
+4. download code
+5. install dependencies
+6. create systemctl services
+
+free -m --> check ram usage
+df -hT --> HD usage
+
+123456789
+
+keep all your commands in a file and run that file --> shell script
+
+What is shell?
+
+Shell is a interpreter in Linux, that checks and executes the users commands
+
+/bin/bash --> interprets every command issued inside linux server
+
+1. carry one by one to home
+2. use a truck, keep everything inside and carry to home
+
+if a command gives error, let us proceed or clear the error and proceed
+
+when you run through program, it should be able to check previous command is success, if success proceed, if failure stop and inform user(error handling)
+
+Algorithm
+---------------
+write steps in your own language what to do?
+
+Install a pacakge through shell script??
+
+check you have root access or not
+
+if no root access, show the error
+
+check if already installed or not, inform already installed
+
+if not installed, install it
+
+check success or not
+
+git --> store scripts or programs
+
+
+
+
+/ --> frontend website
+/hello --> hello website
+/app --> backend
+/app1 --> backend1
+
+m.facebook --> mobile servers
+facebook --> web servers
+
+daws81s.online
+daws81s.online/hello 
