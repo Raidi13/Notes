@@ -9,187 +9,187 @@ How we are solving:- through script , infra asa code and we apply
 .terraform solves manual infra that every thing in console ,by mistake if someone edit worng then app will go down.
  aplication restore back to its  previous stage.
 
- .crud :- we will use crude opperations like creating,read.update,deleting the infra.
- ******
- . Inventory/ resouces management :-> If you see tf script, you know what are the services you are using
- . Dependency management :-> is easy we can create sg,ec2 instaces after creating of all the dependencys.
- . cost management :-> we can creating in 5mins,deletingin 5mins
- . code reuse:-> here we use Modules if you right the  code that can be used to many projects.
- 
- . To run terraform  we need aws cmd.
- . what ever we in cloud that will be a resouces (like create the resouces, deleting the resouces,etc ,)
- 
- . state management:-> Terraform can track what it created can update easily .
- 
- .Terraform :- Terraform is an infrastucutere as code (laac) tool that allow user to create update and manage
- **********   and to maintain the consistency in creating cloud resouces .
-             
-			  .is a declarative way of createing infra (what we declare it will create)
+.crud :- we will use crude opperations like creating,read.update,deleting the infra.
+******
+. Inventory/ resouces management :-> If you see tf script, you know what are the services you are using
+. Dependency management :-> is easy we can create sg,ec2 instaces after creating of all the dependencys.
+. cost management :-> we can creating in 5mins,deletingin 5mins
+. code reuse:-> here we use Modules if you right the  code that can be used to many projects.
 
- 
- .install terraform -->unzip-->cut and past terraform.exe in new folder-->add the path in environment verables 
- .install aws command line ( msiexec.exe /i https://awscli.amazonaws.com/AWSCLIV2.msi ) 
- 
- .Terraform :- using can connect aws,azure,gcp,alibaba,digital ocean, git hub,networking etc 
- ***********   these are called providers. with out knowing the infrastucutere and how it works
-               (refdocs: https://developer.hashicorp.com/terraform/docs)
-  
-  .we will have the same conspects
-  
-  . variables
-  . data types
-  . locals
-  . loops
-  . functions 
-			.datasources
-			.locals
-			.outputs
-			.providers
-			.provisoners
-			
-  .topic:- Creating sg&Ec2 instaces using terraform
-  **********************************************
-  . Terraform file extension is  .tf
-  . provider.tf --> 1st thing  you need  where you can declare what  provider you are using.
-  . install aws cmb and connect with aws configure key & password.
-  
-  .sg:-( 1st security group)
-  *****
-  . resouces "resouces-type" "resouces-name" {
-			key valu pairs
-			
-	}
-	. ec2: 2nd
-	
- 
-  .ingress --> noting but incoming traffic ( so we will check which port ,which id, the traffic is comming etc
-  .egress --> noting but outgoing traffic  ( no need to check its free to exit)
-  
-  . terraform init --> instialise terraform , it will connect with provider and downloads it. init where the tf file present
-  . .git ignore --> all ways to ignore large files
-  . terraform plan :--> cant  create resouces it will plan .
-  . terraform apply -auto-approve ---> it will apply the changes.
-  . terraform destroy -auto -approve ---> it will destroy the changes.
-  
-  . tfvars:- to override default variables
-  ---------
- 1.variables :-  .variable is container that holds the value. (how we will keep groserys in containers)
-  ***********    . we can keep all value in one folder but it tough to maintain 
-  
-  exmpl: x=1 , x=2 
-  
-  
-  ** Tagging strategy
- *************************
- . project
- . component/module
- . environment
- 
- .expense is project 
- *******************
- . mysql
- . backend
- . frontend
- 
- .environment
- ************
- .prod
- .dev
- .Q/A
- 
- . terraform.tfvars :- using this file we can override the defauit values in variables
-  ******************    or else we can set the values also. 
-   . terraform.tfvars are default values
-   
-   . command line. (1st )
-   . terraform.tfvars.(2nd)
-   . environment variables.(3rd) -var="instance_type=t3.large"
-   . default (4th)
-   . promt (5th)
-   
-  . conditions :
-  **************
-  if(expressions) {
-		run this if experession is true
-	}
-	else {
-		run this if experession id false
-	}
-	or
-	experession ? "run this if true" : "run this if false"
-  
-  .outputs :-every resouces exports some values, we can take them and create other resouces
-  *********
-  
-  .loops:-
-  *******
-      . count loop :- this will create no.of instances with same name
-	    . count.index:- will use in looping the instance names 
+. To run terraform  we need aws cmd.
+. what ever we in cloud that will be a resouces (like create the resouces, deleting the resouces,etc ,)
+
+. state management:-> Terraform can track what it created can update easily .
+
+.Terraform :- Terraform is an infrastucutere as code (laac) tool that allow user to create update and manage
+**********   and to maintain the consistency in creating cloud resouces .
+		 
+		  .is a declarative way of createing infra (what we declare it will create)
+
+
+.install terraform -->unzip-->cut and past terraform.exe in new folder-->add the path in environment verables 
+.install aws command line ( msiexec.exe /i https://awscli.amazonaws.com/AWSCLIV2.msi ) 
+
+.Terraform :- using can connect aws,azure,gcp,alibaba,digital ocean, git hub,networking etc 
+***********   these are called providers. with out knowing the infrastucutere and how it works
+		   (refdocs: https://developer.hashicorp.com/terraform/docs)
+
+.we will have the same conspects
+
+. variables
+. data types
+. locals
+. loops
+. functions 
+		.datasources
+		.locals
+		.outputs
+		.providers
+		.provisoners
 		
-		*(terraform console) it will take to terraform promt.
-  
-  .for_each :- for each is used to iterate map...
-  
-  .dynamic :- it used to control map that can be used in ingress 
- -----------  we can't changes in ingress ports u can use
-  . Functions :- terraform has no custom functions we must use in-built functions
-  ***********
-      . merge function:- it will merge 2 lists (we use in project,name,environment ..repeted values)
-	   ---------------
-	   exmpl :- list-1 --> name=raidi course=devops
-				list-2 --> name=raidi , course=terraform
-				list-3 --> name=kartheek ,course=aws
-				now what will be the outputs
-				
-				 name=raidi course= terraform (list 2 course will override list -1 )
+.topic:- Creating sg&Ec2 instaces using terraform
+**********************************************
+. Terraform file extension is  .tf
+. provider.tf --> 1st thing  you need  where you can declare what  provider you are using.
+. install aws cmb and connect with aws configure key & password.
+
+.sg:-( 1st security group)
+*****
+. resouces "resouces-type" "resouces-name" {
+		key valu pairs
+		
+}
+. ec2: 2nd
 
 
- .what we need to create for expense project 
-  . we need to create 3 ec2 instance
-  . r53 records
-     (mysql.aws-dev-rk.online --> pvt.ip
-	 (backend.aws-dev-rk.online --> pvt.ip
-	 (frontend.aws-dev-rk.online --> pub.ip
-  
-  .route 53 (r53):- Amazon Route 53 (R53), is a Domain Name System (DNS) service from Amazon Web Services (AWS):
-   **************	you can set up Route 53 hosted zones, records, and other configurations.
-   
-   
-   .datasources:- data sources are used to fetch information from existing resources in your infrastructure or to
-	************  retrieve data from external sources without managing those resources through Terraform directly. 
-				  and query the information from provider like AMI ID  etc..
-   
-   
-   .locals :-  locals are like varibles but it have some extra capability . you can store expressions 
-   *********    and intermediate values in locals.
-               
-               .variables can be overriden but we cant override locals.
-			   .count.index will not work in locals we have limitations .
-			   .locals can store expressions terraform can run them and get the values
-			   .locals can use variables inside varibles cant refer locals
-			   .can override varibles can't override locals
-			   
-	
-	. state  :-  terraform uses state concept to compaire declared vs actual/real infra .
-	***********
-	
-	1.declared-infra :- is a declarative way of createing infra (what we declare it will create)
-	---------------    .what ever we create in tf-file it will declare 
-	
-	2.actual-infra:- aws infra created
-	--------------
-	
-	   * declared-infra == actual-infra
-	   
-	   . so here terraform responsablity is what ever we created in declared-infra , the same infrastructure 
-         has to maintain in aws.
+.ingress --> noting but incoming traffic ( so we will check which port ,which id, the traffic is comming etc
+.egress --> noting but outgoing traffic  ( no need to check its free to exit)
 
-	*terraform.tf-state:- terraform keeps track of what u created
-    *******************	
+. terraform init --> instialise terraform , it will connect with provider and downloads it. init where the tf file present
+. .git ignore --> all ways to ignore large files
+. terraform plan :--> cant  create resouces it will plan .
+. terraform apply -auto-approve ---> it will apply the changes.
+. terraform destroy -auto -approve ---> it will destroy the changes.
+
+. tfvars:- to override default variables
+---------
+1.variables :-  .variable is container that holds the value. (how we will keep groserys in containers)
+***********    . we can keep all value in one folder but it tough to maintain 
+
+exmpl: x=1 , x=2 
+
+
+** Tagging strategy
+*************************
+. project
+. component/module
+. environment
+
+.expense is project 
+*******************
+. mysql
+. backend
+. frontend
+
+.environment
+************
+.prod
+.dev
+.Q/A
+
+. terraform.tfvars :- using this file we can override the defauit values in variables
+******************    or else we can set the values also. 
+. terraform.tfvars are default values
+
+. command line. (1st )
+. terraform.tfvars.(2nd)
+. environment variables.(3rd) -var="instance_type=t3.large"
+. default (4th)
+. promt (5th)
+
+. conditions :
+**************
+if(expressions) {
+	run this if experession is true
+}
+else {
+	run this if experession id false
+}
+or
+experession ? "run this if true" : "run this if false"
+
+.outputs :-every resouces exports some values, we can take them and create other resouces
+*********
+
+.loops:-
+*******
+  . count loop :- this will create no.of instances with same name
+	. count.index:- will use in looping the instance names 
 	
-	what is refreshing state:- if some one  deleted the instance with out information you.
-	************************   .terraform.tfstate will be refereshed against real infra
-	
+	*(terraform console) it will take to terraform promt.
+
+.for_each :- for each is used to iterate map...
+
+.dynamic :- it used to control map that can be used in ingress 
+-----------  we can't changes in ingress ports u can use
+. Functions :- terraform has no custom functions we must use in-built functions
+***********
+  . merge function:- it will merge 2 lists (we use in project,name,environment ..repeted values)
+   ---------------
+   exmpl :- list-1 --> name=raidi course=devops
+			list-2 --> name=raidi , course=terraform
+			list-3 --> name=kartheek ,course=aws
+			now what will be the outputs
+			
+			 name=raidi course= terraform (list 2 course will override list -1 )
+
+
+.what we need to create for expense project 
+. we need to create 3 ec2 instance
+. r53 records
+ (mysql.aws-dev-rk.online --> pvt.ip
+ (backend.aws-dev-rk.online --> pvt.ip
+ (frontend.aws-dev-rk.online --> pub.ip
+
+.route 53 (r53):- Amazon Route 53 (R53), is a Domain Name System (DNS) service from Amazon Web Services (AWS):
+**************	you can set up Route 53 hosted zones, records, and other configurations.
+
+
+.datasources:- data sources are used to fetch information from existing resources in your infrastructure or to
+************  retrieve data from external sources without managing those resources through Terraform directly. 
+			  and query the information from provider like AMI ID  etc..
+
+
+.locals :-  locals are like varibles but it have some extra capability . you can store expressions 
+*********    and intermediate values in locals.
+		   
+		   .variables can be overriden but we cant override locals.
+		   .count.index will not work in locals we have limitations .
+		   .locals can store expressions terraform can run them and get the values
+		   .locals can use variables inside varibles cant refer locals
+		   .can override varibles can't override locals
+		   
+
+. state  :-  terraform uses state concept to compaire declared vs actual/real infra .
+***********
+
+1.declared-infra :- is a declarative way of createing infra (what we declare it will create)
+---------------    .what ever we create in tf-file it will declare 
+
+2.actual-infra:- aws infra created
+--------------
+
+   * declared-infra == actual-infra
+   
+   . so here terraform responsablity is what ever we created in declared-infra , the same infrastructure 
+	 has to maintain in aws.
+
+*terraform.tf-state:- terraform keeps track of what u created
+*******************	
+
+what is refreshing state:- if some one  deleted the instance with out information you.
+************************   .terraform.tfstate will be refereshed against real infra
+
 	.aws_security_group.allow_ssh_terraform: Refreshing state... [id=sg-0994f93b69e9e3736]
 
 	before I delete
@@ -226,7 +226,7 @@ remote --> inside the servers you created..inside the servers of backend, fronte
 
 Conistent infra across all env:-
 --------------------------------
-1. tfvars : it will create multi-environment using same code.
+1. tfvars : override the defalut variable and it will create multi-environment using same code.
 2. terraform workspaces
 3. seperate repos
 
@@ -242,6 +242,23 @@ for pod environment the traffice will hign so u use t3.large
 
 terraform-multi-env:-
 ---------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 in tfvar-->dev-->backend  (so 1st we need to init in backend.tf(command (terraform init -backend-config=dev/backend.tf)))
 											when you are plan in tfvars ( terraform plan -var-file=dev/dev.tfvars)
                                 when you are apply also u need to give (terraform apply -var-file=dev/dev.tfvars -auto-approve)
@@ -283,6 +300,20 @@ we have disadvantages also.
 .asume if code bigger day by day to manage them in workspaces or in tfvars will be a bit problem 
 .if by change in prodcution if we had error it make entire infrastructure down
 .we have another approch we can use seperate code for each environment
+
+
+********
+"We considered using Terraform Workspaces for code reuse across environments, but we decided against it due to several challenges. 
+While workspaces allow you to reuse the same code for multiple environments, they introduce complexity and risks. 
+For example, a mistake in the shared code could impact all environments, including production, which is a significant risk. 
+Additionally, as the infrastructure grows, managing workspaces and tfvars files becomes more difficult.
+
+Instead, we adopted a separate codebase for each environment (dev, staging, prod). This approach provides better isolation, 
+reduces the risk of cross-environment issues, and makes it easier to maintain and scale the infrastructure. 
+For example, changes in the development environment don’t affect production, and each environment can be managed independently. 
+This has worked well for us, especially in ensuring stability and minimizing risks in production."
+
+*******************
 
 intv Q:-
 -----
@@ -495,10 +526,10 @@ RDS:-relation database service
 load balancer:-  Distributing the load to target group 
 --------------
 team--> target group
-team lead --> load balancer
+team lead --> Distributing the load  to target group
 listener and rules--> he is listening for ui work, backend team lead is listening for backend work.
 who is avalible-->  health check
-members --> servers
+Team members --> servers
 
 
 . from frontend loadbalancer you need to accepct 80 to frontend server.
@@ -516,6 +547,8 @@ database-->bd
 Auto scaling:- 
 -------------
 JD --> lAUNCH TEMPLATE (options to create servers) --> place them inside target group.
+
+. cpu untilisation --> for server we will check the cpu utlisation  that not exced more than 75%
 
 
 project infra:-
@@ -573,11 +606,11 @@ restart the server
 if there is traffic increase
 -------------------
 1. create ec2 instance
-2. configure with backend
+2. #configure with backend
 			You should have ansible-playbooks ready
 			remote provisioner
 			terraform variables --> Shell --> ansible
-			ansible-pull
+			ansible-pull#
 
 .configure using ansible:- create ansible server and provide  backend ec2 instance ansible can connect to it. 
                            ( we need to provide the defalut = true beacause when we are restarting the backend ami will not lanch )
@@ -591,7 +624,7 @@ if there is traffic increase
 .we can delete the instance
 
 .create the lAUNCH-template
-  ami,network,sg,etc..
+  ami,network,sg,etc.. ,m
 
 .create the target group. (we need to connect to vpn and make some changes)
 
@@ -619,7 +652,7 @@ if there is traffic increase
 . for provisioners  we can use remote and we need to connect anisble server.
  (how we will connect to from terraform to ec2 server ) we use provisioners
  
- . null resource --> it will not do anyting mens it wont create any resouces 
+ . null resource --> it will not do anyting means it wont create any resouces 
    but useful for provisioners to.so it will trigger we the instance id when changes.
    
 .terraform variable--> shell --> Ansible
@@ -674,7 +707,9 @@ Rolling update
 -------
 	
 	
-	
+.504 --> .Gateway error timeout
+         .The request is not going from ALB to SERVER.
+		 
 CDN:- cloudfront is content delivery network service of amazon . 
 ----   aws have edge locations to cache the  content across the globe . we can make use of this service to reduce latency to our 
        customers..
