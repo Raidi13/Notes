@@ -68,7 +68,91 @@ sudo systemctl enable jenkins
 				 . no version control.
 				 . if you make it as pipeline and keep it in git you can reuse ,u can review, you can raise the pr.
   
+.Templeat mobel jobs (free style jobs) :-
+-----------------------------------------
+Exmple:-  . i was created 3 jobs (job-1,job-2,job-3) 
+-------   . if i run the script in job-1 i got the output that output will be given to job-2 input same job-2 out will given input to job-3
+          . mostly used the data bases 
+		  . in datbases diffrent diffrent path will get the backup files we will deploy in diffrent path.
+  
+how do you test java application in manual freestyle job:-   java version ( /usr/sbin/alternative -- config java) +1
+---------------------------------------------------
+. maven life cycle:- 1, validate 2,compile 3,test 4,package 5,integration test 6,verify 7,install 8, deploy
+  (developer will the following commands to test we will integrate in pipeline and test)
+. java code 
+. install maven (apache maven) (home :- /usr/share/apche maven)
+. in jenkins under build steps execute shell use following commands (install,test,package,compile)
 
+. maven plugin (if you install the plugine you will the manven project in consule)
+
+.declarative pipeline:-  normal pipeline
+---------------------
+pipeline {
+    agent any 
+    stages {
+        stage('Build') { 
+            steps {
+                sh "echo this is build"
+            }
+        }
+        stage('Test') { 
+            steps {
+                sh "echo this is test"
+            }
+        }
+        stage('Deploy') { 
+            steps {
+                sh "echo this is Deploy"
+                error 'pipeline success'
+            }
+        }
+    }
+}
+
+.scripted pipeline:-  . to run the script  
+----------------------
+node {
+	stage {
+		command
+		stage  {
+
+
+Pipeline job maven:-
+---------------
+. git code
+. 
+
+pipeline {
+    agent any 
+    stages {
+        stage('Build git code') { 
+            steps {
+                sh "echo this is build git ocde"
+            }
+        }
+        stage('install') { 
+            steps {
+                sh "mvn install"
+                
+            }
+        }
+		stage('Test mvn') { 
+            steps {
+                sh "mvn test"
+            }
+        }
+		stage('compile') { 
+            steps {
+                sh "mvn compile"
+            }
+        }
+		stage('package') { 
+            steps {
+                sh "mvn package"
+            }
+        }
+    }
+}
 .Pipeline:- is noting but Mutiple-stages creating like the output be comming input .
 ----------
 Jenkinsfile (Declarative Pipeline)
