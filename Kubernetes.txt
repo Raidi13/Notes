@@ -146,8 +146,8 @@ assignment:-
 .Storage Resources,Networking Resources,Database Resources,Pods,ConfigMaps/Secrets,Nodes
  Containers,Images,Volumes .
 
-  Name spaces:-just like vpc you will have a dedicated isolated project to create your 
- **********  workloads/resources
+ Name spaces:-just like vpc you will have a dedicated isolated project to create your 
+**********  workloads/resources
              (for a project there will be dedicated location that we have to use)
 		      
 			  *1st we need to create the name space for the cluster .
@@ -294,10 +294,10 @@ our goal without toching the code, we need to change the values -----> varables
 	. pod ip are ephemeral (temp) so it is not to good pod -pod with ip address
 					 
 
-services are Networking :-
+services (or) network                                                                                                                                                                                                                                                                                                                :-
 **********************
 3 types:- services are use to communication with other pods.because ip address 
-   are ephemeral (tmp) so u need to access other podes with that service. and
+		are ephemeral (tmp) so u need to access other podes with that service. and
 					  
 . Pod to pod communication using dns and load-balancing. that will expose your pod
   using service to access from internet.
@@ -785,13 +785,21 @@ intq: how do you auto-scale the pod or what is hpa scalling.
  
  ---> helm upgrade <id.name>
  --> helm uninstall mysql -n default --> to delete the default namespace
+ 
+ 
+ why healmignore is required  ?
+
+.Helm reads .helmignore before packaging the chart and skips files/directories matching the patterns listed.
+
+.If .helmignore is missing, Helm includes all files in the chart directory (except a few defaults like .git/), which may lead to issues.
+
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 intv:Q:- Can you explain about RBAC
 A. RBAC we have eks cluster intgrated with aws IAM 
    IAM provides Authentication and inside eks we have role and role bainding objects
    to provide the autherization.
 
-Adimn activity:-
+Adimn activity:- 
 ---------------
 
 in our project eks cluster we will create iam user and we provide the describe cluster access
@@ -938,16 +946,18 @@ exmple:- is noting but pantaing (if apply paint to currency note it will not tak
  
  
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
-.load balancer is nerver part of k8 cluster
+.load balancer is nerver part of k8 cluster what is k8 cluster (control plane & worker nodes)
+.load-balancer is netaive  to aws where eks is k8 plat of as a service
 
 Ingress-controller:-
 ------------------
-Classic LB --> By default it creates classic load balancer
+Classic LB --> By aws default it creates classic load balancer
 			.it is not intelligent
 			.it can't route traffic to different target groups
-			.it is not recommend by AWS
+			.it is not recommend by AWS it is old generations
 	
 .Alb(Application-load-balancer):- 
+------------------------------
 .it is intelligent
 .it routes traffic to multiple tg based on host or context rules
 .it works on layer-7
@@ -1128,7 +1138,7 @@ Topic:- .we use terraform to create cluster and upgrade(same in interview)
 
 	
 .blue group of node:- is the current running nodes	like when we are update the blue group nodes
- -----------------    we will create green group of node just notation differnce we will shift all the pods to greem and we will delete the blue group of nodes.
+ -----------------    we will create green group of node just notation differnce we will shift all the pods to green and we will delete the blue group of nodes.
 					  
 					  blue-green deployment have zero down time approch 
 					  We will create same set of node along once everything is shifted to green we will delete the blue.
@@ -1141,8 +1151,7 @@ check the nodes:- awseks update-kubeconfig --region us-east-1 --name expense-dev
 				 .(kubectl apply -f ../backend/manifest.yaml)
 				 .kubectl get svc
 				 .kubectl get svc -n expense
-				 
-
+	
 Cluster Upgrade:- . we are using terraform based eks cluster we have blue node group and green node groups
 ---------------   . Blue is the current running version   we will create same set of greend node and 
 				  
@@ -1162,7 +1171,7 @@ Cluster Upgrade:- . we are using terraform based eks cluster we have blue node g
 															
 					(change the sg to remove access to other teams)
 				   
-				   4, upgarde green also to 1.31 (in node we will have update option take force upate)
+				   4, upgarde green also to 1.31 (in node we will have update option take force update)
 				   
 				   5, we will cordon blue node , uncordon green nodes 
 				    (kubectl cordon ip-address)
@@ -1173,6 +1182,31 @@ Cluster Upgrade:- . we are using terraform based eks cluster we have blue node g
 				   7, delete blue node group.
 				   
 				   .(if version change to 1.32v then green will move to blue and green will be deleted)
+===========================================================================================================================================================================
+Rolling Updates:-
+------------------
+Gradually replaces old pods with new ones.
+Ensures the application remains available during the update.
+Kubernetes handles this by default when you update a deployment.
+
+Blue-Green Deployments:-
+----------------------
+Two identical environments (blue and green) are maintained.
+The new version is deployed to the idle environment (e.g., green).
+Once tested, traffic is switched from the old environment (blue) to the new one (green).
+This minimizes risk and allows instant rollback by switching back to the old environment.
+
+Canary Deployments:-
+------------------
+The new version is rolled out to a small subset of users (e.g., 10% of traffic).
+If the new version performs well, it is gradually rolled out to all users.
+This reduces the impact of potential issues.
+
+Immutable Deployments:-
+---------------------
+Instead of updating existing pods, new pods are created with the updated version.
+Old pods are terminated only after the new ones are running successfully.
+This ensures consistency and reduces the risk of failed updates.
 
 .VM to containers migration (k8):- vm to micro services.
 --------------------------------
@@ -1292,3 +1326,133 @@ Node:-
  -----------------   like container -d, crio.
  
 .add-ons --> vpc CNI, DNS, ..etc...
+
+
+*****************************************************************************************
+1. Application Load Balancer (ALB) – Layer 7 (HTTP/HTTPS)
+When to Use:
+✅ Web Applications (e.g., websites, APIs, microservices).
+✅ Containerized Apps (ECS/EKS with dynamic ports).
+✅ Path-Based Routing (e.g., /api → Backend Servers, /static → S3).
+✅ Host-Based Routing (e.g., blog.example.com → Blog Servers).
+✅ SSL Termination (offloads HTTPS decryption).
+
+Example:
+
+A shopping website routes:
+
+/cart → Cart Microservice
+
+/products → Product Catalog Microservice
+
+2. Network Load Balancer (NLB) – Layer 4 (TCP/UDP)
+When to Use:
+✅ High-Performance Apps (e.g., gaming, VoIP, stock trading).
+✅ Non-HTTP Traffic (e.g., FTP, SSH, custom TCP/UDP protocols).
+✅ Static IP & Elastic IP Support (required for whitelisting).
+✅ Extreme Low Latency (handles millions of requests/sec).
+
+Example:
+
+A multiplayer game uses NLB to distribute UDP-based player connections across servers.
+
+3. Classic Load Balancer (CLB) – Legacy (Avoid for New Projects)
+When to Use:
+⚠️ Only for Legacy Applications (migrate to ALB/NLB).
+⚠️ Basic HTTP/TCP load balancing (no advanced features).
+
+4. DNS Load Balancer (Round-Robin DNS)
+When to Use:
+✅ Global Traffic Distribution (e.g., servers in US, EU, Asia).
+✅ Simple Failover (if one server fails, DNS points to another).
+✅ Cost-Effective (no infrastructure needed).
+
+Limitations:
+❌ No health checks (unless using advanced DNS like AWS Route 53).
+❌ DNS caching delays (changes take time to propagate).
+
+Example:
+
+A news website uses DNS load balancing to direct users to the nearest regional server.
+
+5. Elastic Load Balancer (ELB) – AWS Managed
+When to Use:
+✅ Auto-Scaling Integration (automatically adds/removes servers).
+✅ Serverless Apps (ALB + Lambda for HTTP APIs).
+✅ Multi-AZ High Availability (AWS handles failover).
+
+Example:
+
+A startup uses ALB + Auto Scaling to handle unpredictable traffic spikes.
+
+6. Gateway Load Balancer (GWLB) – For Security Appliances
+When to Use:
+✅ 3rd-Party Firewalls/IDS/IPS (e.g., FortiGate, Check Point).
+✅ Traffic Inspection (redirect traffic to security VPC).
+
+Example:
+
+A bank routes all traffic through a GWLB to inspect for threats before reaching servers.
+
+Decision Cheat Sheet
+Scenario	Recommended Load Balancer
+Web Apps (HTTP/HTTPS)	ALB (Layer 7)
+Gaming/VoIP (TCP/UDP)	NLB (Layer 4)
+Global Low-Cost Load Balancing	DNS Load Balancer
+AWS Auto-Scaling Integration	ALB or NLB (AWS ELB)
+Hybrid Cloud (On-Prem + AWS)	NLB + Transit Gateway
+Traffic Inspection (Firewalls)	GWLB
+Legacy Applications	Classic Load Balancer (CLB)
+Key Takeaways
+ALB: Best for modern web apps (microservices, path-based routing).
+
+NLB: Best for performance-critical, non-HTTP apps.
+
+DNS LB: Best for global, simple, and cheap distribution.
+
+GWLB: Best for security appliance integration.
+
+***********************************************************************************************************************************
+.how many ways you create the k8 cluster 
+
+1. kops
+2. kubeadm (bootstrap the k8 cluster)
+3. managed cluster (eks,aks,gke)
+
+kubeadm (3 node cluster):- 1 master (control plane) 		,2 workernode 
+------------------------
+. 					( apiserver,etdc,scheduler,controller)  (kubelet,kubeproxi,container runtime)
+
+. sudo kubeadm init to initialize the control plane (master node) & k8 version v1.27.3 -> runs pre checks -> pulls the image -> regestry for that it will get the reqired packages -> certificate etc managed by kubeadm 
+. it keep all those in the folder  "/etc/k8/pki"
+
+. so if you perform * kubectl get node in backend it will go and verify kube| config is there are not ( for to connect the cluster,user)
+.
+
+---------------------------------------------------------------------------------------
+if you worked on on pream server this ports has to be open(in cloud aws or cloud provider will takecare it )
+. kubernetes api server 6443
+. etcd server client api 2379-2380
+. kubelet api 10250
+. kube-scheduler 10251
+. kube-controller-manager 10252
+
+worker nodes:-
+-------------
+. nodeport service - 30000-32767
+
+
+.----------------------------------------------------------------------------------------
+. how can we create k8 cluster in less that 8-10mins
+A, 
+
+----------------------------------------------------------------------------------------------------------
+**. differnce b/t kubelet,kubectl,kubeadm
+
+A, kubelet:- it a component that run in workernode to run the containers in the worker node it always check the controlplain
+   --------  it will communicate with the control plane it will recive the instructions from the control plain.
+   
+   kubectl:- api-server
+   --------
+   kubeadm :- it a tool basicly  that will helipng us to bootstrap the k8 cluster and install all the components into the master node.
+   -------    it helps to connect or join the masternodes.at the same time it will help us to join the worker nodes 
