@@ -1,0 +1,533 @@
+s3:- simple storage service it is a object based storage designed to flat files.
+--  .other then this we have  blocked based storage, storage over the network
+
+.object based storage:- it stores all our files as an object just like (g-drive store some metadata)
+-----------------------  we cannot install/run the applicstions/os
+
+.blocked based storage:- its actually dived the data into fixed size blocks every block the size to kb to mbs
+-----------------------   it is going to fill up the blocks we can use for our ec2 instance to run our operating systems & install the programs
+
+.storage over the networks:-. we have some other service like efs and xfs this are storeger over the networks.
+---------------------------   run in this network and multiple divices can communicate
+
+
+. you can creat a bucket that has to be unic accrose the globe ACL(acess controle list)to public access data you will get the url 
+  you can make an object by 2 options those are 1,ACL - 2, Bucket policy
+. what every you upload it will treat as an object. and this object has some size limitations 0bite (min) to 5tb(max) 
+
+.requirment: we need to make an object public (method ACL):- Enable ACL 1st
+-----------------------------------------------
+.select the obeject--> go to actions --> make public using acl -->permissions --> block all public access has to be turned off 
+
+. if you dont want to creat all of this you can simple make use of bucket policy
+  all the data in that bucket will work
+  
+  
+. storage class:- we have multiple-storage class based on our access parten.
+----------------  .access parten means what is you data and how frequntly you access the data ,
+				   how quckly you need that file
+				   
+for example: we have 3 file 
+			 .1st file i want access the every day n number of times 	
+			 .2nd we will access weekly access but need it immeditily access the data infrequently
+			 .3rd file is like backup that i was not accessing at all
+				 
+			and we even  has a opption to automate the storage class also. 
+
+. object --> storage class -->edit -->
+
+.s3 standard:- is designed for frequntly access data with millseconds access (more than once a month is used you can access the data)
+ ------------- (like 1st file ) aws will maintain the backup in backend chances to loss the data is 0.0001%nt (avaliblity and durablity)
+				costs less but data retrival charges where applicable
+ 
+.s3 standard-1A:- immeditily access the data infrequently once a month
+---------------
+.s3 one-zone-1A:- like  (1a and 1zone ) designed for same purpose the diff is 1 avaliblity
+---------------
+
+.what ever data you are storing in glacier you cannot access immeditily
+
+.Glacier instant retrieval: quratly u can access immeditily the data but not multiple-times we need to initiate restore
+--------------------------
+.glacier flexible retrieval : based on the options u select the data will be restore
+--------------------------	 standard(3-5hrs),bulck(5-12hr),expedited(1-5min)250mb
+.glacier deep archive		: it long-lived take hours
+---------------------
+.reduced redundancy(not recommended as s3 standard is cost effective):- chances to loss the data is high when compared to another storage classes.
+---------------------------------------------------------------------
+
+.s3 free tire 5Gb standardstore 2000 put(upload) /20000 get operations (download)
+
+--------------------------------------------
+Versioning:
+----------
+example:-
+--------
+. you have a file you are modifying that file multiple-time per day and upload to &
+  some how u have did some wrong edits and you have delete that file.
+
+
+.version
+.update
+.delete (restore)
+.upload time
+
+.Bucket Versioning:- propetices  -> enable
+-------------------- --> show version
+.we have show version  that have version id you check the most recently upload by date and time
+ s3 is flate file structure 
+ 
+.we have modify file that was sowing worng data so you can set the show vesions and selecct based on recently uplode and it will delete
+
+.if the file you want restore delete file you show version and take the grade out one and delete the delete marker you restore file 
+
+.aws will cost all the indivudaly file so you can use s3 lifecycle managament role
+
+---------------------------------
+.s3 replications :- same region & cross-region-replications
+----------------
+.for the backup purpose an if same region then you need to create new bucket for replications and cost wont applicable
+
+.for cross-region-replications you need to creat new buket in new region and it cost high
+  hyd  --- singpore region ( creat replications role version must be enable on source and destination)same account or diff account
+
+.need an iam role to replications to source to destination
+
+.we can chance the replications data on selected storage-class  
+ (99% data will replications in 15mis but it cost again) 
+
+.existing data replications automately it will cost again high
+
+.(aws.s3 sysn.sourcebucket destination) as a one time activity
+
+. data replications to multiple region also possible (singpore --> parise)
+.
+
+--------------------
+s3.lifecycle-role:- it help us to autometic transentions to one storage-class to another storage class 
+------------------  and automatically helps us to delete the object.
+
+
+storage-class - data-transfer
+
+.           s3 standard
+  30 days
+			standard-1a/one-zone-1A
+  60 days			
+			glacier/r/d/access
+  61 days			
+		    delete
+			
+
+we have lifecycle-rule for transentions 			
+-----------------------------------------
+. event notification alers sns(sqs):- if any event happning in s3 we will get the notification
+                                      sns and sqs.
+									  
+---------------------------- ------------------
+static-website-hosting:-
+-----------------------
+.we can use s3 bucket to host our static web-site
+.if purchase and static domain name that name has to match the s3 bucket also.
+.
+
+--------------------------------------------------------------------
+Bucket-policy:- it allow us to manages permissions at resource level help at bucketlevel
+---------------
+example:- you have 2 IAM users both user has same permissions but for 2nd user i want restrict 1 specfic opertion
+A, you simply add a bucket policy and apply it. even though if the user applicable
+   at opertion level when it come to resource level it will denay
+   
+   
+object Lock:- . Helps us to protect our data from delections for fixed time
+------------ ex: .what ever data is upload to s3 bucket that it shouid not delete by any one for specfic days
+                  this can be enable at time of bucket creation time. and versiong must be enable also
+______________________________________________________________________________________________________________________________________________  
+vpc:- vps is a virtual private cloud it is a logically isolated data center on cloud resource ,
+       where we can launch our aws resource in controle and sercure manner
+
+ 1, subnet -->route tables --> internet gateway-->security groups -->servers
+ 
+ 2,subenet which is having internet conections are called as public-subenet
+  .private/app-subenet will not have internet connections as routes database subenet is also called private subenet
+  
+3, we need to associate private-subenet with private route-tables, same to database as well
+
+4, we will create igw
+5, associate with igw to vpc
+6, create subenet to public,private,bd 
+7, nat
+8, eip
+9, create route tables and add the routes to public --> internet connections through igw
+10, private subenet--> nat,egress connections to route-tables associate with subenet
+
+
+.DynamoDB :- .DynamoDB is fully managed Nosql database service provided by amazon web service 
+------------  .
+-------------------------------------------------------------------------------------------------------------
+Route 53:- Route 53 is a highly available and scalable Domain Name System (DNS) web service.
+---------  It connects user requests to infrastructure running in AWS like EC2, ELB, or S3.
+ 
+		   .is an dns service 
+		   .we need to create hosted zone (raidi.com)
+		   .public hosted zone it works over the internet to the public
+		   .private hosted zone only with in this aws 
+		   
+You need to create a hosted zone (e.g., raidi.com)
+
+Hosted Zone Type	Purpose
+Public Hosted Zone	Used for domains that are accessible over the internet
+Private Hosted Zone	Used for internal domains, works only within your VPC/AWS
+		   
+🔤 DNS Records in Route 53
+Record Type	Description
+A Record:-	Address record – maps domain to IPv4 address or Alias (e.g., ALB, S3)
+---------
+CNAME Record:-	Canonical name – maps one domain to another (e.g., www.raidi.com ➝ app.raidi.com)
+-------------
+1. 🎯 Simple Routing Policy:-
+------------------------------
+
+Basic DNS mapping – 1 domain → 1 target (e.g., app.raidi.com → EC2 IP)
+
+No routing logic or health checks.
+
+
+2,⚖️ Weighted Routing Policy:-
+-----------------------------
+Split traffic across multiple resources.
+
+Use case: Deploy app in two regions, and control traffic share.
+
+Example:
+80% traffic → ALB in Mumbai
+20% traffic → ALB in New York
+Good for canary deployments or regional balancing.
+
+3. 🚀 Latency Routing Policy:-
+----------------------------
+Sends users to the AWS region that gives the lowest latency (quickest response time).
+It doesn’t measure real-time latency but uses AWS latency data for routing.
+
+4. 🌍 Geolocation Routing Policy:-
+=================================
+Routes traffic based on the geographic location of the user.
+
+Example:
+Users from India → Mumbai ALB
+Users from US → Ohio ALB
+Good for localization or complying with data residency rules.
+
+5. 🚨 Failover Routing Policy:-
+-------------------------------
+Used for high availability setups.
+If the primary resource fails (checked via health checks), traffic is routed to the secondary.
+Example:
+Primary: ALB in Mumbai
+Secondary: ALB in Singapore
+→ If Mumbai fails, Route 53 automatically redirects to Singapore.
+
+-------------------------------------------------------------------------------------------------------
+. event-bridge:- .event-bridge is an service that primerly used in event-driven process and
+  ------------     sechudule process
+  
+. event-driven process:- 
+------------------------
+  example: see u have an ec2 instance that was in an running state it if that ec2 instance
+----------	if it is went into stopped state  immeditly if any sns servers who all sucribe 
+			they all will send an alert notification.
+
+. schudule-process:-
+-------------------
+example:- if i want tigger an lamda function for any 5mins or for 30mins i want run an service 
+-------     an that time schudule-process is used
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+.Asg(auto scalling groups):- 
+---------------------------
+. based the load that come to the application were asg will incress the instance or decress
+
+1, what is goldebAMI (make it as a webserver) mostly we will call probuctions based ami we will call as goldenAMi
+   normal ami are os related
+2, create an elb (dns name will given to end user(google.com)
+3, create an asg
+   -> create a launch template (setting fo new ec2 instance for ASG :- ami,instance type,sg,subenet, keypairs
+      create an ASG(when to scale)
+	  
+.how do you scale automatically:-
+--------------------------------
+.To automate-scalling also we have multiple scalling types
+  1, simple-scalling :- so when you have cpu usage is low or high u can simple set an alarm 
+  ------------------    to match the desired count.
+  
+  2,dynamic-scalling :- mostly we use dynamic-scalling in that we have multiple policy types
+   ----------------                    
+					   1,Target-tracking-scalling:- it incress or decress the workloads based on aggregate metrics load then it will incressor decres the instance
+                        					        (50%) based on min & max capacty  and aws will take care of it
+													 
+					   2,step-scalling:- it is step by step process if you  an ec2 instance based cpu utlization 
+                                         if the cpu is 30% then it will take 2 instance & 60% it will take 3 instance and
+                                         90 % will take 4 instance it will incress	
+		   
+  3,predictive-scalling:- it take the previous period days or weeks and predect the forcast
+  ---------------------
+  What it does: Uses machine learning to predict future traffic based on historical data.
+
+How it works:
+
+Forecasts demand (daily/weekly patterns) and schedules scaling actions before the load actually increases.
+---------------------------------------------------------------------------------------------------------------------------------
+IAM:-identity access managament (if you want to restrict the user at his job role in iam we can create the user,group,policy manage there permissions)
+----
+.we have two types of accounts in aws root user,iam user.
+.Root user has full privilogues to access aws.like (billing,payments,account-transfer,support plan)
+
+create the 2 user:- his role is to manage that service or tickets(ec2 & s3)---
+-----------------  . user --> adduser(s3-admin)-->provide user access --> create the IAM user --> autogenrated password
+                   . group --> with same user you can add them in a group
+				   . copy-permissions--> adding or replicatiing same permissions
+				   . policy --> is noting but a docoument that contains set permissions in json formate
+
+.account-alias:- insted of aws account-id we can create the alias name that shouid br uniqe
+---------------
+.policy:- . we have diff types customer managed/aws managed/aws managed job-function
+---------
+
+Qustions:- u have an iam user he is able to login aws succefully when he is try to do an activity s3 platform
+--------   he is not able to do it.
+
+A, .1st check will check the policys 
+   . check the servers
+   . effect is allow or deny
+   . need to check the actions is allow/deny in s3:*"
+   . resources  allow/deny "*"
+   . conditions 
+   . will check the permission-boundary
+   
+   
+Qustions:- i want to create an user he has to access with in our environment(office permises)
+---------  
+A, so we can create the user and policys and give the global ip-address if the user is working from one region
+   
+
+*cloud trail:- event-history --> lookup-attributes -->
+ -------------
+Qustions:- How to track the iam user activities with in aws environment or 
+--------   / some one delete/modify/user/ the s3 bucket you need to inspect 
+
+A, we have the service called cloud trail it enabled by defaultly.it logs all the events
+   happning on our environment.
+   .it can store last 90 days logs
+   .we can create a trail and store logs for unlimted days.
+   
+   readonly: list bucket/ getobject / download /
+   write: createbucket/ deletebucket/ createuser /modifyuser
+   
+
+.policy-simulater:- .
+------------------
+
+.permission-boundary:- .we can define max permissions
+--------------------
+
+what is goldebAMI/custome ami:-
+--------------------------------
+. If you create an custome ami Every EC2 instance built from the AMI is exactly the same
+. every thing is pre-installed and redy to go.
+. ami can be used to restore environments quickly if some breaks
+. version control you can maintain different versions of ami(v1,v2) for rollback or upgrades 
+
+example:- .if i need 10 ec2 instance with in that i need additional 2gb volume
+--------    Apache webserver has to deliver
+		
+		  . launch 1 ec2 instance and do all custome settings ,then create a image and 
+		    you can launch n number of instances (goldenAMi)
+			
+-----------------------------------------------------------------------------------------------------------------------------------------
+. load balancer:- we have to few type of load balancer
+----------------  1. Application load balancer
+				  2. Network Load balancer
+				  3. Gateway load balancer
+				  4. classic load balancer
+.Application load-balancer:-  
+--------------------------	
+.An Application Load Balancer works at Layer 7 of the OSI model, which means it routes traffic based on content. 
+ It supports HTTP and HTTPS protocols. One of the key advantages is that we can use a single ALB and port to distribute traffic across multiple EC2 instances.
+
+.By default, it uses a round-robin algorithm — 
+ for example, if we have two targets, 
+ 1st request → web1
+ 2nd request → web2
+ 3rd request → web1
+ 4th request → web2, 
+.requests are distributed alternately.
+
+.We can also configure the target group to use the 'least outstanding requests' method. 
+ This is helpful when one server is overloaded —
+ say web1 is handling 80% of the load and web2 only 20%, 
+ the new traffic will be routed more to web2.
+
+.Another important feature is stickiness or session persistence.
+ Example: If a client is connected to web1, 
+          all further requests will go to web1 for a specific duration (e.g., 2 hours or 1 day), 
+		  instead of distributing between web1 and web2.
+
+. we have two types of scalling for any application
+. 1,vertical-scalling & 2,horizontal scalling
+
+.1,vertical-scalling:-
+---------------------
+
+example:- .I have serve 1A that was running with t2.micro configuration
+--------   if that configuration using heavy load & and monitoring in cloudwatch
+           if i stop the instance & adding resource to same instancelike t3.medium( 2cpu and 4gib) it may deliver all the requests
+		   
+
+2,horizontal scalling:- 
+---------------------
+
+
+example:-
+-------
+
+
+
+2,network-load-balancer:-  .
+------------------------
+
+
+
+.*********************
+. diff b/t alb and nlb:-
+----------------------
+.alb:- 1. it supports only HTTP/HTTPS protocols    
+	   2. in alb the endpoint will have public ip address 
+	      those are not dynamic we cant give granty that the ip address well same
+	   3. it can be used for web apps
+
+.nlb:- 1. it supports only TCP,UDP,TLS protocols only
+	   2. wher nlb have Elastic ip address (nslookup)
+	   3. it works on flow-hack alagorithm
+	   4. if you comes to perfomance nlb is capable of handling millions
+		  of requests per second securely while manitaning ultra low latency
+		  
+
+--------------------------------------------------------------------------------------------------------------------------
+.NACL:- . used to filter the traffic
+-----	. it act like a fire-wall at vpc level
+		. i want restrict the unwanted traffic of an ip you can check through flow logs.
+		. you can allow using ip address as well u can deny also
+		. or if you have any third party tools we can integrate and monotire
+		. it is sateless 
+		. allows through inbond & outbond traffic.(http & https)
+--------------------------------------------------------------------------------------------------------------
+.End-point:- .If you want to deliver any service securely to another aws account we can depend on this service .
+---------    
+lets take an example:-
+---------------------
+. i will take 2 aws accounts
+. 1, service-consumer vpc  2,service provider vpc(i am having an data base which is running on 3306 port.)
+. i want to share this aws data with another aws account.
+
+
+---------------------------------------------------------------------------------------------------------------------------------
+.AWS EBS volume:- .Root volume is an operating system you cant launch an instance
+---------------    without root volume.
+example:-  i was running an instance with 8g
+--------   i want to add (2gb) extra volume to it . and later i added 1gb again (3gb)
+		   if your server is in (1a) the extra volume is also has to create ther it self
+		   change it to root privleges (sudo su)
+		   
+
+.isblk -> to check how many volume u have for the instance
+.df -hT --> covert to kb & type
+./dev/xvda1 -> is the current root volume(remaning all are temp volume)
+.xvdf --> is the new volume (isblk)
+.df -hT --> will not dedicate the new volume because the file system not present
+			(file -s /dev/xvdf) if it shows data means (no file system)
+.mkfs -t --> to create the file system (-t) what type
+.mkfs -t xfs /dev/xvdf  (after creating the file-system check (file -s /dev/xvdf)
+.mkdir tempvolume ( create the directory) if you instance reboot the temp volume will removed
+.mount /dev/xvdf tempvolume/
+.df -hT --> new added volume will show here
+.cat /etc/mtab (open this file and check the last line and copy it
+.vim /etc/fstab (vim will open and paste that line
+.mount -all
+
+
+(3gb)
+xfs_growfs -d  -> and add the path (df -hT -> /home/ec2-user/tempvolume)
+-------------------------------------------------------------------------------------------------------------------------------------
+Namespace:-
+-----------
+
+. default will be created at the time of cluster creation time for workloads
+  if you didnt specfic any namespace and if you deploy then default will pick
+  for workloads
+  
+. kube-node-lease it will check the health-checks of the node.
+
+. kube-public 
+
+. kube-system it store all the coredns,kube-proxi,vpc-cni
+
+. set namespace-level-resource limits
+---------------------------------------
+apiversion: v1
+kind:
+metadata:
+	name: namespace-name
+	namespace: name-namespace
+spec:
+	limits:
+	- default:
+		cpu: "1"		#max cpu a container can use
+		memory: "1Gi" #max memory can use
+	  defaultrequest:
+		cpu: "0.5" #default request cpu
+		memory: "512mi" #default request memory
+	  type: container
+---------------------------------------------------------------------------------------------------------------------------
+.EKS -Cluster-auto-scaler:-
+--------------------------
+.
+
+Helm:- .Helm is  a package manager for k8 simpilar to dnf(rhel) or apt(ubuntu)for linux .
+-----   it simplifies the deployment and managament of applications in k8 by using helm-chart-pre-package
+        k8 resources with configurable template.
+		
+		key-comp-helm:-
+		-------------
+		1. helm cli -> command-line tool to install and manage helm chart-pre-package
+		2. helm chart -> A collections of yaml file that define k8 resource like(depy,service,configmap,etc..)
+		3. helm-repository -> A storage location for charts (artifacts,helm,repo)
+		4. values yaml -> configure parameters for the helm chart.
+		
+		Why-helm-imp:-
+		---------------
+		.In an enterprise eks env managing multiple microservices manually using raw yaml file become
+		 comples . helm provides simplification and manage muti-k8 obejects as a single pacakge.
+	    
+		.Reusablity -> Use the same chart across multiple env with diff configure
+		.versioning & roleback-> Easy to roll back to previous version if the deployment fails
+		.parameterization-> Customize deployment with value.yaml insted of modfying yaml file manually
+		.dependency management-> Hepls mange dependency service (deploying a databases alongside an app)
+
+-----------------------------------------------------------------------------------------------------------------------------------
+Terraform:
+
+Your AWS provider may not support the newest HCL syntax introduced in Terraform v1.7. Teams prefer v1.4.6 or v1.5.7 for stability.
+
+Kubernetes (EKS):
+
+AWS EKS typically lags 2–3 versions behind open-source. In early 2025, EKS may only support up to v1.27 or v1.28.
+
+Ansible:
+
+Many roles on Ansible Galaxy are tested up to v2.14. Using v2.17 might cause deprecation issues or failed tasks.
+
+Jenkins:
+
+Companies stick to a known-stable LTS (e.g., 2.401.x) and upgrade twice a year after plugin compatibility is verified.
+Use latest in dev/test, but staggered/stable versions in production after testing.
+-------------------------------------------------------------------------------------------------------------------------
