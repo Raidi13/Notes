@@ -1,0 +1,312 @@
+. GitHub actions is also cicd toll just like jenkins insted of purchasing the liceance we can use 
+  git-actions to build -> test -> deploy and uses  yaml.file
+. 🚀 Build → Test → Deploy in GitHub Actions
+Just like Jenkins pipelines, GitHub Actions lets you automate:
+
+🔨 1. Build Stage
+Compile your code (e.g., mvn clean install for Java)
+
+Linting or formatting checks
+
+Create artifacts (e.g., JARs, Docker images)
+
+✅ 2. Test Stage
+Run unit tests, integration tests, etc.
+
+Generate test reports or code coverage
+
+Use matrix builds to test across OS/versions (like Python 3.8/3.9/3.10)
+
+📦 3. Deploy Stage
+Push Docker images to ECR/DockerHub
+
+Deploy apps to:
+
+EKS using kubectl + Helm
+
+EC2 using SSH or Ansible
+
+S3, Lambda, CloudFront (for frontend/serverless)
+
+Rollbacks, notifications (Slack, email), and more
+
+.GitHub Actions COMPONENTS:-
+----------------------------
+1. Workflow
+A workflow is the full automation process.
+It's defined in a .yml file inside .github/workflows/.
+
+Example: A CI/CD workflow that builds, tests, and deploys your app.
+🗂️ Think of it as your entire pipeline setup.
+
+2. Events
+Events are triggers that start a workflow.
+
+Common events:
+
+push – code pushed to a branch
+
+pull_request – PR opened/merged
+
+schedule – cron jobs
+
+workflow_dispatch – manual trigger
+
+🔔 These decide when your workflow should run.
+
+3. Jobs
+A job is a group of steps that runs together on a runner.
+
+Each job runs on its own virtual machine (unless told to share).
+
+Example jobs: build, test, deploy.
+
+🧱 Workflows are made of one or more jobs.
+
+4. Steps
+Steps are the individual tasks inside a job.
+
+Each step can run a command or call an action.
+
+Example: run: mvn clean install, or uses: actions/checkout@v3
+
+🔨 Each step does a specific task within the job.
+
+5. Environment Variables
+Used to store reusable values like config, tokens (non-sensitive).
+
+Set at the workflow, job, or step level.
+
+🧪 Helpful for passing dynamic or static values.
+
+6. Secrets
+Used to store sensitive information like:
+
+API keys
+
+AWS credentials
+
+DockerHub passwords
+
+Stored securely in GitHub repo settings.
+
+🔐 Never hardcode secrets in your workflows!
+
+7. Cache
+Speeds up workflows by reusing files like:
+
+Maven/Node dependencies
+
+Docker layers
+
+Saves time for repeated runs.
+
+🚀 Great for faster builds.
+
+8. Artifacts
+Files created during the workflow (e.g., JAR, test reports).
+
+Can be uploaded/downloaded for later use.
+
+📦 Used to pass build output between jobs or save it.
+
+9. Runner
+A runner is a server (or VM) where your jobs execute.
+
+GitHub provides hosted runners (like Ubuntu, Windows, macOS).
+
+You can also set up your own self-hosted runners.
+
+🤖 Like a Jenkins agent – it runs your jobs.
+
+✅ Visual Summary:
+Workflow
+ ├─ Triggered by → Event
+ └─ Contains → Jobs
+      └─ Each job → Steps
+            └─ Uses → Actions, Commands
+      ├─ Uses → Runners
+      ├─ Stores → Cache, Artifacts
+      └─ Uses → Env Vars & Secrets
+
+-----------------------------------------------------------------------------
+.Github Actions Supported Build types:-
+---------------------------------------
+1,Matrix Build:
+Used to run the same job across multiple configurations (e.g., different Node.js versions, OS types, or regions) in parallel.
+
+2,Single-Env Build:
+Used to build or deploy in a specific environment (like production).
+Cost-effective for targeted builds.
+
+3,Parallel Build:
+Used to run multiple jobs in parallel (e.g., unit tests, integration tests) after a main build job completes successfully.
+
+4,Jobs that run in sequence, where the 2nd and 3rd jobs depend on the success of the 1st job.
+
+5,Scheduled Build:
+Automatically triggers builds on a schedule (e.g., nightly builds or routine scans) using cron syntax.
+
+6,Reusable Workflow Build:
+Centralized, reusable workflow that can be called by other workflows across different repositories or folders.
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+.Git-Actions runners:- . we have two types of runners 
+-----------------------   1. GitHub Hosted runner  2, self-hosted runner
+
+1. GitHub Hosted runner:-
+	Managed by GitHub
+	Pre-installed with tools (Node, Python, Terraform, Docker, etc.)
+	OS options: ubuntu-latest, windows-latest, macos-latest
+	Automatically scaled
+	No maintenance needed
+	Free minutes available (limited for private repos)
+	 Best for: Most CI/CD workflows with standard environments.
+
+2, self-hosted runner:-
+	Managed by you (your VM or server)
+	You install and maintain the runner
+	Can be any OS: RHEL, CentOS, Ubuntu, Windows, etc.
+	Full control over installed tools and security
+	Ideal for custom environments, private networks, or cost control
+	 Best for: Large builds, custom OS (e.g. RHEL-9), network-restricted environments.
+-----------------------------------------------------------------------------------------------
+CI/CD Pipeline Flow:-
+--------------------
+Developer pushes code to GitHub (main or feature branch)
+        ↓
+GitHub Actions triggers CI/CD workflow
+        ↓
+✅ Terraform runs (provision or validate infra)
+        ↓
+🐳 Docker builds the image and pushes to Amazon ECR
+        ↓
+☸️ Kubernetes deployment via Helm (to EKS)
+        ↓
+📣 Slack/Teams notification on success/failure
+
+-----------------------------------------------------------
+Github Actions:-
+---------------
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run tests
+      run: npm test
+-------------------------------------------
+Practice:-
+--------------
+1,Create a GitHub Actions YAML (.github/workflows/deploy.yml) to:
+
+2,Trigger on every push to main branch.
+
+3,Run on Ubuntu runner.
+
+4,Set up AWS credentials using GitHub secrets.
+
+5,Run Terraform init/plan/apply from infra/.
+
+6,Build Docker image and push to ECR.
+
+7,Deploy to EKS using Helm (chart in helm/ directory).
+
+8,Send a Slack message using a webhook on success or failure.
+
+name: CI/CD for Microservice
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPO: 123456789012.dkr.ecr.us-east-1.amazonaws.com/my-app
+  CLUSTER_NAME: my-eks-cluster
+  NAMESPACE: default
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        working-directory: infra
+        run: terraform init
+
+      - name: Terraform Plan
+        working-directory: infra
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        working-directory: infra
+        run: terraform apply -auto-approve tfplan
+
+      - name: Login to Amazon ECR
+        run: |
+          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO
+
+      - name: Build and Push Docker Image
+        run: |
+          IMAGE_TAG=latest
+          docker build -t $ECR_REPO:$IMAGE_TAG .
+          docker push $ECR_REPO:$IMAGE_TAG
+
+      - name: Configure kubectl
+        run: |
+          aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
+
+      - name: Deploy with Helm
+        run: |
+          helm upgrade --install my-app helm/ \
+            --namespace $NAMESPACE \
+            --set image.repository=$ECR_REPO \
+            --set image.tag=latest
+
+      - name: Notify Slack on Success
+        if: success()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{"text":"✅ Deployment to EKS successful!"}' \
+          ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify Slack on Failure
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{"text":"❌ Deployment to EKS failed!"}' \
+          ${{ secrets.SLACK_WEBHOOK_URL }}
+--------------------------------------------------------------------------------------------------------------------------------------
